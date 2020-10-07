@@ -1,0 +1,61 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Cloudformation template for Cribl to collect data and send data into an AWS S3 bucket.",
+    "Resources": {
+      "CriblEC2Role": {
+         "Type": "AWS::IAM::Role",
+         "Properties": {
+            "AssumeRolePolicyDocument": {
+               "Version" : "2012-10-17",
+               "Statement": [ {
+                  "Effect": "Allow",
+                  "Principal": {
+                     "Service": [ "ec2.amazonaws.com" ]
+                  },
+                  "Action": [ "sts:AssumeRole" ]
+               } ]
+            },
+            "Path": "/"
+         }
+      },
+      "RolePolicies": {
+         "Type": "AWS::IAM::Policy",
+         "Properties": {
+            "PolicyName": "criblS3",
+            "PolicyDocument": {
+               "Version" : "2012-10-17",
+               "Statement": [ {
+                  "Effect": "Allow",
+                  "Action": [
+                        "s3:GetObject",
+                        "s3:ListBucket",
+                        "s3:PutObject",
+                        "sqs:CreateQueue",
+                        "sqs:GetQueueUrl",
+                        "sqs:ListQueues",
+                        "sqs:SendMessage",
+                        "sqs:SendMessageBatch",
+                        "sqs:SetQueueAttributes"
+                                ],
+                  "Resource": [
+                        "arn:aws:s3:::*",
+                        "arn:aws:sqs:::*"
+                                ]
+               } ]
+            },
+            "Roles": [ {
+               "Ref": "CriblEC2Role"
+            } ]
+         }
+      },
+      "RootInstanceProfile": {
+         "Type": "AWS::IAM::InstanceProfile",
+         "Properties": {
+            "Path": "/",
+            "Roles": [ {
+               "Ref": "CriblEC2Role"
+            } ]
+         }
+      }
+   }
+}  
