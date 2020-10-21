@@ -21,7 +21,7 @@
       "RolePolicies": {
          "Type": "AWS::IAM::Policy",
          "Properties": {
-            "PolicyName": "criblS3",
+            "PolicyName": "criblPolicy",
             "PolicyDocument": {
                "Version" : "2012-10-17",
                "Statement": [ {
@@ -35,11 +35,15 @@
                         "sqs:ListQueues",
                         "sqs:SendMessage",
                         "sqs:SendMessageBatch",
-                        "sqs:SetQueueAttributes"
+                        "sqs:SetQueueAttributes",
+                        "kinesis:ListStreams",
+                        "kinesis:SubscribeToShard",
+                        "kinesis:ListShards"
                                 ],
                   "Resource": [
                         "arn:aws:s3:::*",
-                        "arn:aws:sqs:::*"
+                        "arn:aws:sqs:::*",
+                        "arn:aws:kinesis:::*"
                                 ]
                } ]
             },
