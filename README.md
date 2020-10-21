@@ -43,7 +43,7 @@ Here is the raw JSON code you can add to your own CloudFormation Template. Just 
       "RolePolicies": {
          "Type": "AWS::IAM::Policy",
          "Properties": {
-            "PolicyName": "criblS3",
+            "PolicyName": "criblPolicy",
             "PolicyDocument": {
                "Version" : "2012-10-17",
                "Statement": [ {
@@ -57,11 +57,15 @@ Here is the raw JSON code you can add to your own CloudFormation Template. Just 
                         "sqs:ListQueues",
                         "sqs:SendMessage",
                         "sqs:SendMessageBatch",
-                        "sqs:SetQueueAttributes"
+                        "sqs:SetQueueAttributes",
+                        "kinesis:ListStreams",
+                        "kinesis:SubscribeToShard",
+                        "kinesis:ListShards"
                                 ],
                   "Resource": [
                         "arn:aws:s3:::*",
-                        "arn:aws:sqs:::*"
+                        "arn:aws:sqs:::*",
+                        "arn:aws:kinesis:::*"
                                 ]
                } ]
             },
