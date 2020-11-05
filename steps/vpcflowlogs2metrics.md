@@ -1,7 +1,7 @@
 # VPC Flow Logs-to-metrics
 
 ## Overview of Use Case
-This use case is to get VPC Flow logs into your system of record and then convert the log events to metric data. This is based on the [excellent blog post](https://cribl.io/blog/practical-logs-to-metrics-conversion-with-cribl/) by one of the Cribl Co-Founder Dritran Bitinka. This guide will walk you through setting up a VPC and then setup logging VPC Flow logs to a CloudWatch Log Group. 
+This use case is to get VPC Flow logs into your system of record and then convert the log events to metric data. This is based on the [excellent blog post](https://cribl.io/blog/practical-logs-to-metrics-conversion-with-cribl/) by one of the Cribl Co-Founder Dritran Bitincka. This guide will walk you through setting up a VPC and then setup logging VPC Flow logs to a CloudWatch Log Group. 
 
 ## VPC and Logging Setup
 Lets setup the AWS VPC and configure the logging for your VPC. 
