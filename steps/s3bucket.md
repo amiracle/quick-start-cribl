@@ -10,7 +10,7 @@ This use case will show you how to setup Cribl LogStream to send data from any s
 - Log into your Cribl LogStream instance by going to  http://cribl_ip:9000/inputs where cribl_ip is your instance ip.
  
 ![Cribl Start Screen](https://quickstart-cribl-logstream.s3.amazonaws.com/screenshots/s3bucket/1-clsmp-s3.png)
-_Figure 1. Initial Login Screen for Cribl LogStream__
+_Figure 1. Initial Login Screen for Cribl LogStream_
 
 - Click on Data in the toolbar and select Sources:
 
