@@ -90,6 +90,9 @@ Navigate to http://<cribl_logstream_ip>:9000 and log in using admin / <ec2_insta
 - [VPC Flow Logs to Metrics](steps/vpcflowlogs2metrics.md)
 - [Transform Splunk HEC to S2S](steps/splunkhecS2S.md)
 
+## Feedback
+Please submit feedback, feature ideas or report bugs using the [Issues](https://github.com/amiracle/quick-start-cribl/issues) section of this GitHub repository. If you would like to submit code, please review the Quick Start Contributor's Guide.
+
 ## Additional resources
 
 ### Cribl Resources
