@@ -1,3 +1,8 @@
+# Moved to Cribl GitHub Repo
+>
+>Please go to https://github.com/criblio/aws-quickstart-cribl-logstream for all updates to this repo.
+>
+
 # Cribl LogStream on Amazon
 > This Quick Start guide was created by [Cribl](https://cribl.io) to help automate the deployment of Cribl LogStream in your AWS environment. These  automated reference deployments use AWS CloudFormation templates to deploy EC2 instances, IAM policies and S3 buckets, following AWS best practices. 
 
