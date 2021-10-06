@@ -1,0 +1,34 @@
+-----------------------------------------------------------------------------
+Region: us-west-2
+StackName: tCaT-aws-quickstart-cribl-logstream-default-6e04b46035364902bbbe3de7f0b92343
+*****************************************************************************
+ResourceStatusReason:  
+Stack launch was successful
+*****************************************************************************
+*****************************************************************************
+Events:  
+TimeStamp                         ResourceStatus      ResourceType                LogicalResourceId                                                             ResourceStatusReason
+--------------------------------  ------------------  --------------------------  ----------------------------------------------------------------------------  ---------------------------
+2021-09-13 13:42:29.556000+00:00  CREATE_COMPLETE     AWS::CloudFormation::Stack  tCaT-aws-quickstart-cribl-logstream-default-6e04b46035364902bbbe3de7f0b92343
+2021-09-13 13:42:27.468000+00:00  CREATE_COMPLETE     AWS::EC2::Instance          ec2SingleInstance
+2021-09-13 13:42:19.738000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Instance          ec2SingleInstance                                                             Resource creation Initiated
+2021-09-13 13:42:17.914000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Instance          ec2SingleInstance
+2021-09-13 13:42:15.978000+00:00  CREATE_COMPLETE     AWS::IAM::InstanceProfile   iamDefaultInstanceProfile
+2021-09-13 13:40:15.357000+00:00  CREATE_IN_PROGRESS  AWS::IAM::InstanceProfile   iamDefaultInstanceProfile                                                     Resource creation Initiated
+2021-09-13 13:40:15.001000+00:00  CREATE_IN_PROGRESS  AWS::IAM::InstanceProfile   iamDefaultInstanceProfile
+2021-09-13 13:40:12.988000+00:00  CREATE_COMPLETE     AWS::IAM::Role              LogstreamRole
+2021-09-13 13:39:55.120000+00:00  CREATE_IN_PROGRESS  AWS::IAM::Role              LogstreamRole                                                                 Resource creation Initiated
+2021-09-13 13:39:54.703000+00:00  CREATE_IN_PROGRESS  AWS::IAM::Role              LogstreamRole
+2021-09-13 13:39:53.013000+00:00  CREATE_COMPLETE     AWS::S3::Bucket             s3DefaultDestinationBucket
+2021-09-13 13:39:37.529000+00:00  CREATE_COMPLETE     AWS::EC2::SecurityGroup     ec2SingleSecurityGroup
+2021-09-13 13:39:35.248000+00:00  CREATE_IN_PROGRESS  AWS::EC2::SecurityGroup     ec2SingleSecurityGroup                                                        Resource creation Initiated
+2021-09-13 13:39:31.500000+00:00  CREATE_IN_PROGRESS  AWS::S3::Bucket             s3DefaultDestinationBucket                                                    Resource creation Initiated
+2021-09-13 13:39:30.446000+00:00  CREATE_IN_PROGRESS  AWS::EC2::SecurityGroup     ec2SingleSecurityGroup
+2021-09-13 13:39:30.366000+00:00  CREATE_IN_PROGRESS  AWS::S3::Bucket             s3DefaultDestinationBucket
+2021-09-13 13:39:26.319000+00:00  CREATE_IN_PROGRESS  AWS::CloudFormation::Stack  tCaT-aws-quickstart-cribl-logstream-default-6e04b46035364902bbbe3de7f0b92343  Transformation succeeded
+2021-09-13 13:39:22.563000+00:00  CREATE_IN_PROGRESS  AWS::CloudFormation::Stack  tCaT-aws-quickstart-cribl-logstream-default-6e04b46035364902bbbe3de7f0b92343  User Initiated
+*****************************************************************************
+-----------------------------------------------------------------------------
+Tested on: Monday, 13. September 2021 09:43AM
+-----------------------------------------------------------------------------
+
