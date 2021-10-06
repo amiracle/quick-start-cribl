@@ -1,7 +1,0 @@
-sshKeyPair: ls-mp-test
-amiId: ami-02ed085abbeae0785
-instanceType: c5a.large
-vpcId: vpc-0c8c6ae92e4bb51f9
-subnetId: subnet-090dbbf9823e1b682
-webAccessCidr: 0.0.0.0/0
-sshAccessCidr: 0.0.0.0/0
