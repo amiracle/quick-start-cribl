@@ -8,7 +8,7 @@ Cribl has put together a simple method to launch a CloudFormation template that 
 If you want to just deploy a Cribl LogStream Standard instance running on AWS, you can also head over to [Cribl.Cloud](https://cribl.cloud) and sign up for your own free tenant. 
 
 ## Architecture 
-Deploying this Quick Start with default parameters will build a single EC2 instance Leader Instance. The instance will be launched within the VPC and (AZ's) you specify. This deployment will also create an S3 bucket that can be used as a source or destination. The EC2 Role and the associated policy will also be created as a part of this CloudFormation template and assigned to the Worker Nodes.  
+Deploying this Quick Start with default parameters will build a single EC2 Instance. The instance will be launched within the VPC and (AZ's) you specify. This deployment will also create an S3 bucket that can be used as a source or destination. The EC2 Role and the associated policy will also be created as a part of this CloudFormation template and assigned to this node.  
 
 ![Cribl Single Deplyoment](docs/images/Cribl_AWS_Single.png)
 

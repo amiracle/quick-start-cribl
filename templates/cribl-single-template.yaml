@@ -263,6 +263,50 @@ Resources:
       Roles:
         - !Ref LogstreamRole
 
+
+ec2AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      DesiredCapacity: 1
+      MaxSize: 1
+      MinSize: 1
+      HealthCheckType: EC2
+      LaunchTemplate:
+        LaunchTemplateId: !Ref ec2launchTemplate
+        Version: !GetAtt ec2launchTemplate.LatestVersionNumber
+      VPCZoneIdentifier:
+        - !Select [0, !Ref subnetIds]
+        - !Select [1, !Ref subnetIds]
+      Tags:
+        - Key: Name
+          Value: Cribl LogStream Single Instance ASG
+          PropagateAtLaunch: false
+
+  ec2AutoScalingGroupLifecycleHook:
+    Type: AWS::AutoScaling::LifecycleHook
+    Properties:
+      AutoScalingGroupName: !Ref ec2AutoScalingGroup
+      DefaultResult: ABANDON
+      HeartbeatTimeout: 3600
+      LifecycleHookName: cribl-logstream-worker-shutdown
+      LifecycleTransition: "autoscaling:EC2_INSTANCE_TERMINATING"
+
+ ec2launchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        InstanceInitiatedShutdownBehavior: terminate
+        ImageId:        
+          !If [
+            workerAmiId,
+            !Ref workerAmiId,
+            !If [ 
+              isWorkerARM,
+              !FindInMap [RegionMap, !Ref "AWS::Region", "ARM64"],
+              !FindInMap [RegionMap, !Ref "AWS::Region", "HVM64"]
+            ]
+          ]
+
   ec2SingleInstance:
     Type: AWS::EC2::Instance
     Properties:
