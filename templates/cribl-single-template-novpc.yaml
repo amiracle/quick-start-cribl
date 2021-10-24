@@ -7,17 +7,7 @@ Metadata:
     Order: 1
   LICENSE: Apache License, Version 2.0 
   'AWS::CloudFormation::Interface':
-    ParameterGroups:
-      - Label:
-          default: Network configuration
-        Parameters:
-          - AvailabilityZones
-          - VPCCIDR
-          - PrivateSubnet1CIDR
-          - PrivateSubnet2CIDR
-          - PublicSubnet1CIDR
-          - PublicSubnet2CIDR
-          - VPCTenancy
+    ParameterGroups:    
       - Label:
           default: Amazon EC2 configuration
         Parameters:
@@ -28,6 +18,7 @@ Metadata:
           - webAccessCidr
           - instanceType
           - AdditionalPolicies
+          - vpcId
       - Label:
           default: Cribl configuration
         Parameters: 
@@ -43,8 +34,10 @@ Metadata:
           - QSS3KeyPrefix
           - QSS3BucketRegion
     ParameterLabels:
-      AvailabilityZones:
-        default: Availability Zones
+      vpcId:
+        default: VPC for Deployment
+      subnetIds:
+        default: Subnets
       sshKeyPair:
         default: sshKeyPair
       amiId:
@@ -59,18 +52,6 @@ Metadata:
         default: Leader Node URL
       workerCount:
         default: Number of Worker nodes
-      VPCCIDR:
-        default: VPC CIDR
-      PrivateSubnet1CIDR:
-        default: Private subnet 1 CIDR
-      PrivateSubnet2CIDR:
-        default: Private subnet 2 CIDR
-      PublicSubnet1CIDR:
-        default: Public subnet 1 CIDR
-      PublicSubnet2CIDR:
-        default: Public subnet 2 CIDR
-      VPCTenancy:
-        default: VPC tenancy
       sshAccessCidr:
         default: ssh access Cidr
       webAccessCidr:
@@ -95,43 +76,12 @@ Parameters:
     Description: "Version of Cribl LogStream you want to install"
     Type: String
     Default: 3.1.2
-  VPCCIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Default: 10.0.0.0/16
-    Description: CIDR Block for the VPC.
-    Type: String
-  PrivateSubnet1CIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Default: 10.0.0.0/19
-    Description: CIDR block for private subnet 1, located in Availability Zone 1.
-    Type: String
-  PrivateSubnet2CIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Default: 10.0.32.0/19
-    Description: CIDR block for private subnet 2, located in Availability Zone 2.
-    Type: String
-  PublicSubnet1CIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Default: 10.0.128.0/20
-    Description: CIDR Block for the public DMZ subnet 1, located in Availability Zone 1.
-    Type: String
-  PublicSubnet2CIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Default: 10.0.144.0/20
-    Description: CIDR Block for the public DMZ subnet 2, located in Availability Zone 2.
-    Type: String
-  VPCTenancy:
-    AllowedValues:
-      - default
-      - dedicated
-    Default: default
-    Description: The allowed tenancy of instances launched into the VPC.
-    Type: String
+  vpcId:
+    Description: "REQUIRED: ID of your existing VPC."
+    Type: AWS::EC2::VPC::Id
+  subnetIds:
+    Description: "REQUIRED: List of 2 subnet Ids in different AZs. These subnets must be in the same VPC as VPC ID above."
+    Type: List<AWS::EC2::Subnet::Id>
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
     ConstraintDescription: The Quick Start bucket name can include numbers, lowercase
@@ -257,38 +207,12 @@ Metadata:
         default: Web Access CIDR
       sshAccessCidr:
         default: SSH Access CIDR
-
 Conditions:
   customAmiId: !Not [!Equals [!Ref amiId, ""]]  
   UsingDefaultBucket: !Equals
     - !Ref QSS3BucketName
     - 'aws-quickstart'
 Resources:
-  VPStack:
-    Type: 'AWS::CloudFormation::Stack'
-    Properties:
-      TemplateURL: !Sub
-        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template.yaml
-        - S3Bucket: !If
-            - UsingDefaultBucket
-            - !Sub 'aws-quickstart-${AWS::Region}'
-            - !Ref 'QSS3BucketName'
-          S3Region: !If
-            - UsingDefaultBucket
-            - !Ref 'AWS::Region'
-            - !Ref 'QSS3BucketRegion'
-      Parameters:
-        AvailabilityZones: !Join 
-          - ','
-          - !Ref AvailabilityZones
-        NumberOfAZs: '2'
-        PrivateSubnet1ACIDR: !Ref PrivateSubnet1CIDR
-        PrivateSubnet2ACIDR: !Ref PrivateSubnet2CIDR
-        PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
-        PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
-        VPCCIDR: !Ref VPCCIDR
-        VPCTenancy: !Ref VPCTenancy
-
   CriblDeployment:
     Type: 'AWS::CloudFormation:Stack'
     Properties: 
@@ -302,13 +226,8 @@ Resources:
           KeyName: !Ref sshKeyPair
           InstanceType: !Ref instanceType
           AdditionalPolicies: !Ref AdditionalPolicies
-          subnetids:  !GetAtt 
-            - VPCStack
-            - Outputs.PublicSubnet1ID
-            - Outputs.PublicSubnet2ID
-          VpcId: !GetAtt 
-            - VPCStack
-            - Outputs.VPCID
+          subnetids:  !Ref subnetIds
+          VpcId: !Ref vpcId
 Outputs:
   Postdeployment:
     Description: See the deployment guide for post-deployment steps.
