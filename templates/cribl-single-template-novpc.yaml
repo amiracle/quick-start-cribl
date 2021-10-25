@@ -60,12 +60,15 @@ Metadata:
         default: instance type
       AdditionalPolicies:
         default: additional Policies
+      QSS3BucketName:
+        default: Quick Start S3 bucket name
+      QSS3KeyPrefix:
+        default: Qucik Start prefix
+      QSS3BucketRegion:
+        default: Quick Start Region
 cfn-lint: { config: { ignore_checks: [E9007] } }
 
 Parameters:
-  AvailabilityZones:
-    Description: List of Availability Zones to use for the subnets in the VPC.
-    Type: 'List<AWS::EC2::AvailabilityZone::Name>'
   sshKeyPair:
     Description: "REQUIRED: Name of an existing EC2 key pair."
     Type: AWS::EC2::KeyPair::KeyName
