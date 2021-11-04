@@ -12,11 +12,7 @@ Metadata:
         Parameters:
           - AvailabilityZones
           - VPCCIDR
-          - PrivateSubnet1CIDR
-          - PrivateSubnet2CIDR
           - PublicSubnet1CIDR
-          - PublicSubnet2CIDR
-          - RemoteAccessCIDR
           - VPCTenancy
       - Label:
           default: Amazon EC2 configuration
@@ -25,6 +21,8 @@ Metadata:
           - amiId
           - instanceType
           - AdditionalPolicies
+          - sshAccessCidr
+          - webAccessCidr
       - Label:
           default: AWS Quick Start configuration
         Parameters:
@@ -34,14 +32,8 @@ Metadata:
     ParameterLabels:
       AvailabilityZones:
         default: Availability Zones
-      PrivateSubnet1CIDR:
-        default: Private subnet 1 CIDR
-      PrivateSubnet2CIDR:
-        default: Private subnet 2 CIDR
       PublicSubnet1CIDR:
         default: Public subnet 1 CIDR
-      PublicSubnet2CIDR:
-        default: Public subnet 2 CIDR
       VPCTenancy:
         default: VPC tenancy
       VPCCIDR:
@@ -50,40 +42,18 @@ Metadata:
         default: SSH Key Name
       instanceType:
         default: EC2 Instance Type
-      vpcId:
-        default: VPC ID
-      subnetId:
-        default: Subnet ID
-      webAccessCidr:
-        default: Web Access CIDR
-      sshAccessCidr:
-        default: SSH Access CIDR      
       QSS3BucketName:
         default: Quick Start S3 bucket name
       QSS3KeyPrefix:
         default: Quick Start S3 key prefix  
   cfn-lint: { config: { ignore_checks: [E9007] } }
-
 Parameters:
   AvailabilityZones:
     Description: List of Availability Zones to use for the subnets in the VPC.
     Type: 'List<AWS::EC2::AvailabilityZone::Name>'
   sshKeyPair:
     Description: "REQUIRED: Name of an existing EC2 key pair."
-    Type: AWS::EC2::KeyPair::KeyName
-  amiId:
-    Description: "OPTIONAL: Advanced setting. Leave blank unless advised to assign by Cribl Support."
-    Type: String
-  sshAccessCidr:
-    Type: String
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
-    Description: "REQUIRED: CIDR IP range permitted to SSH access to the instance. We recommend you set this value to a trusted IP range."
-  webAccessCidr:
-    Type: String
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
-    Description: "REQUIRED: The CIDR IP range permitted to access the LogStream web console. We recommend you set this value to a trusted IP range."
+    Type: 'AWS::EC2::KeyPair::KeyName'
   instanceType:
     Description: EC2 instance type to provision the LogStream instance. If none specified, c5.2xlarge will be used.
     Type: String
@@ -112,27 +82,27 @@ Parameters:
     Type: CommaDelimitedList
   PrivateSubnet1CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
     Default: 10.0.0.0/19
     Description: CIDR block for private subnet 1, located in Availability Zone 1.
     Type: String
   PrivateSubnet2CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
     Default: 10.0.32.0/19
     Description: CIDR block for private subnet 2, located in Availability Zone 2.
     Type: String
   PublicSubnet1CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
     Default: 10.0.128.0/20
-    Description: CIDR Block for the public DMZ subnet 1, located in Availability Zone 1.
+    Description: CIDR block for the public DMZ subnet 1, located in Availability Zone 1.
     Type: String
   PublicSubnet2CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
     Default: 10.0.144.0/20
-    Description: CIDR Block for the public DMZ subnet 2, located in Availability Zone 2.
+    Description: CIDR block for the public DMZ subnet 2, located in Availability Zone 2.
     Type: String
   VPCTenancy:
     AllowedValues:
@@ -171,61 +141,31 @@ Parameters:
       See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html 
       and https://aws-quickstart.github.io/option1.html.
     Type: String
-  RemoteAccessCIDR:
+  sshAccessCidr:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
     Description: Allowed CIDR block for external SSH access to the bastions
     Type: String
+    Default: 0.0.0.0/0
+  webAccessCidr:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
+    Description: Allowed CIDR block for external SSH access to the bastions
+    Type: String
+    Default: 0.0.0.0/0
   VPCCIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.0.0/16
     Description: CIDR Block for the VPC.
     Type: String
-
 Conditions:
-  amiId: !Not [!Equals [!Ref amiId, ""]]
   UsingDefaultBucket: !Equals
     - !Ref QSS3BucketName
     - 'aws-quickstart'
-Mappings:
- RegionMap:
-  ap-northeast-1:
-    HVM64: ami-0ec6aee3faffb3cc8
-  ap-northeast-2:
-    HVM64: ami-0d5f9d5a198a6d126
-  ap-south-1:
-    HVM64: ami-02bfb29ef5b7e12ca
-  ap-southeast-1:
-    HVM64: ami-0078d7ac03c0d74fe
-  ap-southeast-2:
-    HVM64: ami-03b4c0267901d3dd8
-  ca-central-1:
-    HVM64: ami-0e235ba41c7ef212e
-  eu-central-1:
-    HVM64: ami-044e45f6a4b0c718b
-  eu-north-1:
-    HVM64: ami-0de17bd98529daca0
-  eu-west-1:
-    HVM64: ami-08d28bc23dea521d5
-  eu-west-2:
-    HVM64: ami-0e27d6df39a9cbf98
-  eu-west-3:
-    HVM64: ami-02c97e9564918d64e
-  sa-east-1:
-    HVM64: ami-01577732d7058192a
-  us-east-1:
-    HVM64: ami-08c381cf6e70cdec0
-  us-east-2:
-    HVM64: ami-0ef4bac28de23d41b
-  us-west-1:
-    HVM64: ami-0f8d1bbef118f40b7
-  us-west-2:
-    HVM64: ami-02d8e13e786cb117b
-
 Resources:
   VPCStack:
-    Type: 'AWS::CloudFormation::Stack'
+    Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
         - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template.yaml
@@ -238,9 +178,7 @@ Resources:
             - !Ref 'AWS::Region'
             - !Ref 'QSS3BucketRegion'
       Parameters:
-        AvailabilityZones: !Join 
-          - ','
-          - !Ref AvailabilityZones
+        AvailabilityZones: !Join [',', !Ref AvailabilityZones]
         NumberOfAZs: '2'
         PrivateSubnet1ACIDR: !Ref PrivateSubnet1CIDR
         PrivateSubnet2ACIDR: !Ref PrivateSubnet2CIDR
@@ -248,141 +186,27 @@ Resources:
         PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
         VPCCIDR: !Ref VPCCIDR
         VPCTenancy: !Ref VPCTenancy
-  ec2SingleSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
+  CriblDeploy:
+    Type: AWS::CloudFormation::Stack
     Properties:
-      GroupDescription: Cribl LogStream Access
-      vpcId: !GetAtt
-        - VPCStack
-        - Outputs.VPCID
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
-          CidrIp: !Ref sshAccessCidr
-          Description: SSH access to the LogStream instance
-        - IpProtocol: tcp
-          FromPort: 9000
-          ToPort: 9000
-          CidrIp: !Ref webAccessCidr
-          Description: UI access to the LogStream instance
-      SecurityGroupEgress:
-        - IpProtocol: "-1"
-          CidrIp: 0.0.0.0/0
-          Description: Egress access
-
-  s3DefaultDestinationBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
-      Tags:
-        - Key: Name
-          Value: Cribl LogStream default destination bucket
-
-  LogstreamRole:
-    Type: AWS::IAM::Role
-    Properties:
-      Path: !Sub "/logstream/${AWS::StackName}/"
-      ManagedPolicyArns: !Ref AdditionalPolicies
-      Description: Cribl LogStream default IAM role
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - ec2.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Policies:
-        - PolicyName: S3Destinations
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - s3:PutObject
-                  - s3:GetObject
-                  - s3:ListBucket
-                  - s3:GetBucketLocation
-                Resource:
-                  - !Sub ${s3DefaultDestinationBucket.Arn}
-                  - !Sub ${s3DefaultDestinationBucket.Arn}/*
-        - PolicyName: S3Sources
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - s3:GetObject
-                  - s3:GetBucketLocation
-                Resource: "*"
-        - PolicyName: KinesisSources
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - kinesis:Get*
-                  - kinesis:List*
-                  - kinesis:Describe*
-                Resource: "*"
-      Tags:
-        - Key: Name
-          Value: Cribl LogStream  IAM role
-
-  iamDefaultInstanceProfile:
-    Type: AWS::IAM::InstanceProfile
-    Properties:
-      Path: !Sub "/logstream/${AWS::StackName}/"
-      Roles:
-        - !Ref LogstreamRole
-
-  ec2SingleInstance:
-    Type: AWS::EC2::Instance
-    Properties:
-      ImageId:
-        !If [
-          amiId,
-          !Ref amiId,
-          !FindInMap [RegionMap, !Ref "AWS::Region", HVM64]
-        ]
-      KeyName: !Ref sshKeyPair
-      InstanceType: !Ref instanceType
-      IamInstanceProfile: !Ref iamDefaultInstanceProfile
-      SubnetId: !GetAtt
-        - VPCStack
-        - Outputs.PulicSubnet1TD 
-      SecurityGroupIds:
-        - !Ref ec2SingleSecurityGroup
-      UserData: !Base64
-        Fn::Sub:
-          - |
-              #cloud-config
-
-              runcmd: 
-                - /usr/local/bin/configure_logstream.sh -m single -b ${s3DefaultDestinationBucket}
-                - sleep 10
-                - cloud-init query -f "$(cat /opt/cribl_build/users.json.j2)" > /opt/cribl/local/cribl/auth/users.json
-                - chown -R cribl:cribl /opt/cribl
-        
-          - s3DefaultDestinationBucket: !Ref s3DefaultDestinationBucket
-      Tags:
-        - Key: Name
-          Value: Cribl LogStream Single Instance
-        - Key: Purpose
-          Value: Machine data analysis
-Outputs:
-  logstreamWebUrlPublic:
-    Value: !Sub http://${ec2SingleInstance.PublicIp}:9000/login
-    Description: Cribl LogStream Web URL (PublicIp)
-  logstreamWebAccessCreds:
-    Value: !Sub "admin / ${ec2SingleInstance}"
-    Description: Default Web Access Credentials
-  stackName:
-    Value: !Sub "${AWS::StackName}"
-    Description: CFN Stack Name
+      TemplateURL: !Sub
+        - https://cribl-marketplace-public-artifacts-${S3Region}.s3.${S3Region}.${AWS::URLSuffix}/logstream/3.1.3/single/template/free_x86_64_template.yaml
+        - S3Region: !If
+            - UsingDefaultBucket
+            - !Ref 'AWS::Region'
+            - !Ref 'QSS3BucketRegion'
+      Parameters:
+        amiId: ''
+        sshAccessCidr: !Ref sshAccessCidr
+        webAccessCidr: !Ref webAccessCidr
+        vpcId: !GetAtt
+          - VPCStack
+          - Outputs.VPCID
+        subnetId: !GetAtt
+          - VPCStack
+          - Outputs.PublicSubnet1CIDR
+        instanceType: !Ref instanceType
+        sshKeyPair: !Ref sshKeyPair
+        AdditionalPolicies: !Join 
+          - ','
+          - !Ref AdditionalPolicies

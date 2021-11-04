@@ -14,18 +14,18 @@ Metadata:
           - subnetId
           - sshAccessCidr
           - webAccessCidr
+          - amiId
       - Label:
           default: Amazon EC2 configuration
         Parameters:
           - sshKeyPair
-          - amiId
           - instanceType
           - AdditionalPolicies
       - Label:
           default: AWS Quick Start configuration
         Parameters:
-          - QSS3BucketName
-          - QSS3KeyPrefix
+  #        - QSS3BucketName
+  #        - QSS3KeyPrefix
           - QSS3BucketRegion
     ParameterLabels:
       sshKeyPair:
@@ -40,19 +40,16 @@ Metadata:
         default: Web Access CIDR
       sshAccessCidr:
         default: SSH Access CIDR      
-      QSS3BucketName:
-        default: Quick Start S3 bucket name
-      QSS3KeyPrefix:
-        default: Quick Start S3 key prefix  
+ #     QSS3BucketName:
+ #       default: Quick Start S3 bucket name
+ #     QSS3KeyPrefix:
+ #       default: Quick Start S3 key prefix  
   cfn-lint: { config: { ignore_checks: [E9007] } }
 
 Parameters:
   sshKeyPair:
     Description: "REQUIRED: Name of an existing EC2 key pair."
     Type: AWS::EC2::KeyPair::KeyName
-  amiId:
-    Description: "OPTIONAL: Advanced setting. Leave blank unless advised to assign by Cribl Support."
-    Type: String
   vpcId:
     Description: "REQUIRED: ID of your existing VPC."
     Type: AWS::EC2::VPC::Id
@@ -95,260 +92,49 @@ Parameters:
     Default:  "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore,arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
     Description: A comma separated list of Policy ARNs to add to the IAM role used by Logstream instances
     Type: CommaDelimitedList
-  QSS3BucketName:
-    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
-    ConstraintDescription: The Quick Start bucket name can include numbers, lowercase
-      letters, uppercase letters, and hyphens (-). It cannot start or end with a 
-      hyphen (-).
-    Default: aws-quickstart
-    Description: Name of the S3 bucket for your copy of the Quick Start assets. 
-      Keep the default name unless you are customizing the template. 
-      Changing the name updates code references to point to a new Quick 
-      Start location. This name can include numbers, lowercase letters, 
-      uppercase letters, and hyphens, but do not start or end with a hyphen (-). 
-      See https://aws-quickstart.github.io/option1.html.
-    Type: String
+  #QSS3BucketName:
+  #  AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+  #  ConstraintDescription: The Quick Start bucket name can include numbers, lowercase
+  #    letters, uppercase letters, and hyphens (-). It cannot start or end with a 
+  #    hyphen (-).
+  #  Default: aws-quickstart
+  #  Description: Name of the S3 bucket for your copy of the Quick Start assets. 
+  #    Keep the default name unless you are customizing the template. 
+  #    Changing the name updates code references to point to a new Quick 
+  #    Start location. This name can include numbers, lowercase letters, 
+  #    uppercase letters, and hyphens, but do not start or end with a hyphen (-). 
+  #    See https://aws-quickstart.github.io/option1.html.
+  #  Type: String
   QSS3BucketRegion:
     Default: 'us-east-1'
     Description: The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.
     Type: String
-  QSS3KeyPrefix:
-    AllowedPattern: ^([0-9a-zA-Z-.]+/)*$
-    ConstraintDescription: The Quick Start S3 key prefix can include numbers, lowercase letters,
-      uppercase letters, hyphens (-), and forward slashes (/).
-    Default: quickstart-linux-bastion/
-    Description: S3 key prefix that is used to simulate a directory for your copy of the 
-      Quick Start assets. Keep the default prefix unless you are customizing 
-      the template. Changing this prefix updates code references to point to 
-      a new Quick Start location. This prefix can include numbers, lowercase 
-      letters, uppercase letters, hyphens (-), and forward slashes (/). End with a forward slash. 
-      See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html 
-      and https://aws-quickstart.github.io/option1.html.
-    Type: String
-  
-Rules:
-  SubnetsInVPC:
-    Assertions:
-      - Assert: !EachMemberIn
-          - !ValueOfAll
-            - AWS::EC2::Subnet::Id
-            - VpcId
-          - !RefAll "AWS::EC2::VPC::Id"
-        AssertDescription: All subnets must in the VPC
-
-Mappings:
- RegionMap:
-  ap-northeast-1:
-    HVM64: ami-0ec6aee3faffb3cc8
-  ap-northeast-2:
-    HVM64: ami-0d5f9d5a198a6d126
-  ap-south-1:
-    HVM64: ami-02bfb29ef5b7e12ca
-  ap-southeast-1:
-    HVM64: ami-0078d7ac03c0d74fe
-  ap-southeast-2:
-    HVM64: ami-03b4c0267901d3dd8
-  ca-central-1:
-    HVM64: ami-0e235ba41c7ef212e
-  eu-central-1:
-    HVM64: ami-044e45f6a4b0c718b
-  eu-north-1:
-    HVM64: ami-0de17bd98529daca0
-  eu-west-1:
-    HVM64: ami-08d28bc23dea521d5
-  eu-west-2:
-    HVM64: ami-0e27d6df39a9cbf98
-  eu-west-3:
-    HVM64: ami-02c97e9564918d64e
-  sa-east-1:
-    HVM64: ami-01577732d7058192a
-  us-east-1:
-    HVM64: ami-08c381cf6e70cdec0
-  us-east-2:
-    HVM64: ami-0ef4bac28de23d41b
-  us-west-1:
-    HVM64: ami-0f8d1bbef118f40b7
-  us-west-2:
-    HVM64: ami-02d8e13e786cb117b
-
-Conditions:
-  amiId: !Not [!Equals [!Ref amiId, ""]]
-  UsingDefaultBucket: !Equals
-    - !Ref QSS3BucketName
-    - 'aws-quickstart'
-
+#  QSS3KeyPrefix:
+#    AllowedPattern: ^([0-9a-zA-Z-.]+/)*$
+#    ConstraintDescription: The Quick Start S3 key prefix can include numbers, lowercase letters,
+#     uppercase letters, hyphens (-), and forward slashes (/).
+#    Default: quickstart-linux-bastion/
+#    Description: S3 key prefix that is used to simulate a directory for your copy of the 
+#      Quick Start assets. Keep the default prefix unless you are customizing 
+#      the template. Changing this prefix updates code references to point to 
+#      a new Quick Start location. This prefix can include numbers, lowercase 
+#      letters, uppercase letters, hyphens (-), and forward slashes (/). End with a forward slash. 
+#      See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html 
+#      and https://aws-quickstart.github.io/option1.html.
+#    Type: String
 Resources:
-  ec2SingleSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
+  CribleDeploy:
+    Type: AWS::CloudFormation::Stack
     Properties:
-      GroupDescription: Cribl LogStream Access
-      VpcId: !Ref vpcId
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
-          CidrIp: !Ref sshAccessCidr
-          Description: SSH access to the LogStream instance
-        - IpProtocol: tcp
-          FromPort: 9000
-          ToPort: 9000
-          CidrIp: !Ref webAccessCidr
-          Description: UI access to the LogStream instance
-      SecurityGroupEgress:
-        - IpProtocol: "-1"
-          CidrIp: 0.0.0.0/0
-          Description: Egress access
-
-  s3DefaultDestinationBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
-      Tags:
-        - Key: Name
-          Value: Cribl LogStream default destination bucket
-
-  LogstreamRole:
-    Type: AWS::IAM::Role
-    Properties:
-      Path: !Sub "/logstream/${AWS::StackName}/"
-      ManagedPolicyArns: !Ref AdditionalPolicies
-      Description: Cribl LogStream default IAM role
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - ec2.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Policies:
-        - PolicyName: S3Destinations
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - s3:PutObject
-                  - s3:GetObject
-                  - s3:ListBucket
-                  - s3:GetBucketLocation
-                Resource:
-                  - !Sub ${s3DefaultDestinationBucket.Arn}
-                  - !Sub ${s3DefaultDestinationBucket.Arn}/*
-        - PolicyName: S3Sources
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - s3:GetObject
-                  - s3:GetBucketLocation
-                Resource: "*"
-        - PolicyName: KinesisSources
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - kinesis:Get*
-                  - kinesis:List*
-                  - kinesis:Describe*
-                Resource: "*"
-      Tags:
-        - Key: Name
-          Value: Cribl LogStream  IAM role
-
-  iamDefaultInstanceProfile:
-    Type: AWS::IAM::InstanceProfile
-    Properties:
-      Path: !Sub "/logstream/${AWS::StackName}/"
-      Roles:
-        - !Ref LogstreamRole
-
-  ec2SingleInstance:
-    Type: AWS::EC2::Instance
-    Properties:
-      ImageId:
-        !If [
-          amiid,
-          !Ref amiId,
-          !FindInMap [RegionMap, !Ref "AWS::Region", HVM64]
-        ]
-      KeyName: !Ref sshKeyPair
-      InstanceType: !Ref instanceType
-      IamInstanceProfile: !Ref iamDefaultInstanceProfile
-      SubnetId: !Ref subnetId
-      SecurityGroupIds:
-        - !Ref ec2SingleSecurityGroup
-      UserData: !Base64
-        Fn::Sub:
-          - |
-              #cloud-config
-
-              runcmd: 
-                - /usr/local/bin/configure_logstream.sh -m single -b ${s3DefaultDestinationBucket}
-                - sleep 10
-                - cloud-init query -f "$(cat /opt/cribl_build/users.json.j2)" > /opt/cribl/local/cribl/auth/users.json
-                - chown -R cribl:cribl /opt/cribl
-        
-          - s3DefaultDestinationBucket: !Ref s3DefaultDestinationBucket
-      Tags:
-        - Key: Name
-          Value: Cribl LogStream Single Instance
-        - Key: Purpose
-          Value: Machine data analysis
-Outputs:
-  BastionAutoScalingGroup:
-    Description: Auto Scaling group reference ID.
-    Value: !Ref BastionAutoScalingGroup
-    Export:
-      Name: !Sub '${AWS::StackName}-BastionAutoScalingGroup'
-  EIP1:
-    Description: Elastic IP 1 for bastion.
-    Value: !Ref EIP1
-    Export:
-      Name: !Sub '${AWS::StackName}-EIP1'
-  EIP2:
-    Condition: 2BastionCondition
-    Description: Elastic IP 2 for bastion.
-    Value: !Ref EIP2
-    Export:
-      Name: !Sub '${AWS::StackName}-EIP2'
-  EIP3:
-    Condition: 3BastionCondition
-    Description: Elastic IP 3 for bastion.
-    Value: !Ref EIP3
-    Export:
-      Name: !Sub '${AWS::StackName}-EIP3'
-  EIP4:
-    Condition: 4BastionCondition
-    Description: Elastic IP 4 for bastion.
-    Value: !Ref EIP4
-    Export:
-      Name: !Sub '${AWS::StackName}-EIP4'
-  CloudWatchLogs:
-    Description: CloudWatch Logs GroupName. Your SSH logs will be stored here.
-    Value: !Ref BastionMainLogGroup
-    Export:
-      Name: !Sub '${AWS::StackName}-CloudWatchLogs'
-  BastionSecurityGroupID:
-    Description: Bastion security group ID.
-    Value: !Ref BastionSecurityGroup
-    Export:
-      Name: !Sub '${AWS::StackName}-BastionSecurityGroupID'
-  BastionHostRole:
-    Description: Bastion IAM role name.
-    Value: !If
-      - CreateIAMRole
-      - !Ref BastionHostRole
-      - !Ref AlternativeIAMRole
-    Export:
-      Name: !Sub '${AWS::StackName}-BastionHostRole'
-  Postdeployment:
-    Description: See the deployment guide for post-deployment steps.
-    Value: https://aws.amazon.com/quickstart/?quickstart-all.sort-by=item.additionalFields.sortDate&quickstart-all.sort-order=desc&awsm.page-quickstart-all=5
+      TemplateURL: https://cribl-marketplace-public-artifacts-us-east-2.s3.us-east-2.amazonaws.com/logstream/3.1.3/single/template/free_x86_64_template.yaml
+      Parameters:
+        amiId: ''
+        sshAccessCidr: !Ref sshAccessCidr
+        webAccessCidr: !Ref webAccessCidr
+        vpcId: !Ref vpcId
+        subnetId: !Ref subnetId
+        instanceType: !Ref instanceType
+        sshKeyPair: !Ref sshKeyPair
+        AdditionalPolicies: !Join 
+          - ','
+          - !Ref AdditionalPolicies

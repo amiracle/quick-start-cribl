@@ -3,18 +3,18 @@ project:
   owner: quickstart-eng@amazon.com
   package_lambda: false
   regions:
-    - us-east-1
+    - us-east-2
 tests:
   default:
-    template: /Users/kamiloamir/Documents/GitHub/quick-start-cribl/templates/simple-cribl-single-template-novpc.yaml
+    template: /Users/kamiloamir/Documents/GitHub/quick-start-cribl/templates/cribl-single-template.yaml
     regions: 
-      - us-east-1
+      - us-east-2
     parameters: 
-      sshKeyPair: ami-factory-test
-      amiId: ami-08c381cf6e70cdec0
-      vpcId: vpc-08402416c5226a0ad
-      subnetId: subnet-07200a96bfe921ff7
-      sshAccessCidr: 0.0.0.0/0
-      webAccessCidr: 0.0.0.0/0
+      sshKeyPair: kamkeyoh
+      amiId: ami-0ef4bac28de23d41b
+      vpcId: vpc-0ca13737b826351fb
+      subnetId: subnet-08718e341442f3a7d
       instanceType: c5a.large    
       AdditionalPolicies: "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore,arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+      sshAccessCidr: 0.0.0.0/0
+      webAccessCidr: 0.0.0.0/0
