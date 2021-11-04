@@ -4,11 +4,17 @@ project:
   package_lambda: false
   regions:
     - us-east-1
-    - us-east-2
-    - us-west-1
-    - us-west-2
 tests:
   default:
-    template: ./templates/cribl-single-template.yaml
+    template: /Users/kamiloamir/Documents/GitHub/quick-start-cribl/templates/simple-cribl-single-template-novpc.yaml
     regions: 
-      - us-west-2
+      - us-east-1
+    parameters: 
+      sshKeyPair: ami-factory-test
+      amiId: ami-08c381cf6e70cdec0
+      vpcId: vpc-08402416c5226a0ad
+      subnetId: subnet-07200a96bfe921ff7
+      sshAccessCidr: 0.0.0.0/0
+      webAccessCidr: 0.0.0.0/0
+      instanceType: c5a.large    
+      AdditionalPolicies: "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore,arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
