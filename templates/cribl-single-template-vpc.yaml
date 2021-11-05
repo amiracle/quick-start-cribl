@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Cribl LogStream+VPC QuickStart Deployment (qs-1s9hhq8an)
+Description: Cribl LogStream+VPC QuickStart Deployment x86_64 (qs-1s9hhq8an)
 Metadata:
   QuickStartDocumentation:
     EntrypointName: "Launch into a new VPC"
@@ -30,6 +30,8 @@ Metadata:
           - QSS3KeyPrefix
           - QSS3BucketRegion
     ParameterLabels:
+      amiId:
+        default: AMI ID for custom work
       AvailabilityZones:
         default: Availability Zones
       PublicSubnet1CIDR:
@@ -48,6 +50,10 @@ Metadata:
         default: Quick Start S3 key prefix  
   cfn-lint: { config: { ignore_checks: [E9007] } }
 Parameters:
+  amiId:
+    Description: "Optional if sent an AMI to use by Cribl Support"
+    Type: String
+    Default: ''
   AvailabilityZones:
     Description: List of Availability Zones to use for the subnets in the VPC.
     Type: 'List<AWS::EC2::AvailabilityZone::Name>'
@@ -116,7 +122,7 @@ Parameters:
     ConstraintDescription: The Quick Start bucket name can include numbers, lowercase
       letters, uppercase letters, and hyphens (-). It cannot start or end with a 
       hyphen (-).
-    Default: aws-quickstart
+    Default: aws-quickstart-cribl-logstream
     Description: Name of the S3 bucket for your copy of the Quick Start assets. 
       Keep the default name unless you are customizing the template. 
       Changing the name updates code references to point to a new Quick 
@@ -125,14 +131,14 @@ Parameters:
       See https://aws-quickstart.github.io/option1.html.
     Type: String
   QSS3BucketRegion:
-    Default: 'us-east-2'
+    Default: 'AWS::Region'
     Description: The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.
     Type: String
   QSS3KeyPrefix:
     AllowedPattern: ^([0-9a-zA-Z-.]+/)*$
     ConstraintDescription: The Quick Start S3 key prefix can include numbers, lowercase letters,
       uppercase letters, hyphens (-), and forward slashes (/).
-    Default: quickstart-linux-bastion/
+    Default: logstream/
     Description: S3 key prefix that is used to simulate a directory for your copy of the 
       Quick Start assets. Keep the default prefix unless you are customizing 
       the template. Changing this prefix updates code references to point to 
@@ -162,7 +168,7 @@ Parameters:
 Conditions:
   UsingDefaultBucket: !Equals
     - !Ref QSS3BucketName
-    - 'aws-quickstart'
+    - 'aws-quickstart-cribl-logstream'
 Resources:
   VPCStack:
     Type: AWS::CloudFormation::Stack
@@ -186,17 +192,17 @@ Resources:
         PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
         VPCCIDR: !Ref VPCCIDR
         VPCTenancy: !Ref VPCTenancy
-  CriblDeploy:
+  CribleDeploy:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
-        - https://cribl-marketplace-public-artifacts-${S3Region}.s3.${S3Region}.${AWS::URLSuffix}/logstream/3.1.3/single/template/free_x86_64_template.yaml
-        - S3Region: !If
+      - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_x86_64_template.yaml
+      - S3Bucket: !If
             - UsingDefaultBucket
-            - !Ref 'AWS::Region'
-            - !Ref 'QSS3BucketRegion'
+            - !Sub 'aws-quickstart-cribl-logstream-${AWS::Region}'
+            - !Ref 'QSS3BucketName'
       Parameters:
-        amiId: ''
+        amiId: !Ref amiId
         sshAccessCidr: !Ref sshAccessCidr
         webAccessCidr: !Ref webAccessCidr
         vpcId: !GetAtt

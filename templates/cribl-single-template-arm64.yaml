@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Cribl LogStream Existing VPC QuickStart Deployment x86_64 (qs-1s9hhq8an)
+Description: Cribl LogStream Existing VPC QuickStart Deployment arm64 (qs-1s9hhq8an)
 Metadata:
   QuickStartDocumentation:
     EntrypointName: Launch into an existing VPC
@@ -137,7 +137,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
-      - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_x86_64_template.yaml
+      - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_arm64_template.yaml
       - S3Bucket: !If
             - UsingDefaultBucket
             - !Sub 'aws-quickstart-cribl-logstream-${AWS::Region}'

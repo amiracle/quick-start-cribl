@@ -18,3 +18,4 @@ tests:
       AdditionalPolicies: "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore,arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
       sshAccessCidr: 0.0.0.0/0
       webAccessCidr: 0.0.0.0/0
+      QSS3BucketRegion: us-east-2
