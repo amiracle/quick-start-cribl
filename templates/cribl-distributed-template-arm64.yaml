@@ -66,7 +66,7 @@ Metadata:
         default: Quick Start S3 bucket name
       QSS3KeyPrefix:
         default: Quick Start S3 key prefix  
-  cfn-lint: { config: { ignore_checks: [E9007] } }
+# cfn-lint: { config: { ignore_checks: [E9007] } }
 
 Parameters:
   leaderSshKeyPair:
@@ -188,15 +188,14 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
-      - https://aws-quickstart-cribl-logstream-us-east-2.s3.us-east-2.amazonaws.com/logstream/dist_free_arm64_template.yaml
-#      - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/dist_free_arm64_template.yaml
+      - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/dist_free_arm64_template.yaml
       - S3Bucket: !If
             - UsingDefaultBucket
             - !Sub 'aws-quickstart-cribl-logstream-${AWS::Region}'
             - !Ref 'QSS3BucketName'
       Parameters:
         customleaderAmiId: !Ref customleaderAmiId
-        LeaderInstanceType: !Ref leaderInstanceType
+        leaderInstanceType: !Ref leaderInstanceType
         leaderSshKeyPair: !Ref leaderSshKeyPair
         SubnetIds: !Select [0, !Ref subnetIds]
         sshAccessCidr: !Ref sshAccessCidr
@@ -206,12 +205,11 @@ Resources:
           - ','
           - !Ref AdditionalPolicies
         customworkerAmiId: !Ref customworkerAmiId
-        WorkerInstanceType: !Ref workerInstanceType
+        workerInstanceType: !Ref workerInstanceType
         workerSshKeyPair: !Ref workerSshKeyPair
         DesiredCapacity: !Ref workerCount
         MaxSize: !Ref workerCount
         MinSize: !Ref workerCount
-        HealthCheckType: EC2
         VPCZoneIdentifier:
           - !Select [0, !Ref subnetIds]
           - !Select [1, !Ref subnetIds]
