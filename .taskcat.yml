@@ -13,11 +13,12 @@ tests:
       leaderSshKeyPair: kamkeyoh
       workerSshKeyPair: kamkeyoh
       workerCount: 2
-      customleaderAmiId: ami-0860d5c5f690feed3
-      customworkerAmiId: ami-0860d5c5f690feed3
+      customleaderAmiId: ''
+      customworkerAmiId: ''
       vpcId: vpc-0ca13737b826351fb
       subnetIds: subnet-08718e341442f3a7d subnet-098b406b9300623ba
-      instanceType: c6g.large    
+      workerInstanceType: c6g.large    
+      leaderInstanceType: c6g.large    
       AdditionalPolicies: "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore,arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
       sshAccessCidr: 0.0.0.0/0
       webAccessCidr: 0.0.0.0/0

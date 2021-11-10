@@ -6,7 +6,7 @@ This Quick Start deployment builds a new AWS environment consisting of the infra
 
 ## Pricing
 
-You are responsible for the cost of the AWS services used while running this Quick Start reference deployment. There is no additional cost for using the Quick Start. For Cribl LogStream pricing information, see the [Cribl website](https://cribl.io/pricing).
+You are responsible for the cost of the AWS services used while running this Quick Start reference deployment. There is no additional cost for using the Quick Start. For Cribl LogStream pricing information, see the [Cribl website](https://cribl.io/cribl-logstream-pricing/).
 
 This deployment takes approximately 10 minutes to complete. For more information and step-by-step deployment instructions, see the [deployment guide](https://guide)
 
@@ -15,7 +15,7 @@ Cribl LogStream can optimze the collection of VPC Flow Logs and CloudTrail logs 
 
 ## Architecture
 
-![Architecture](/docs/images/Cribl_AWS_Distributed.png)
+![Architecture](/docs/images/Cribl_AWS_Single.png)
 
 
 To post feedback, submit feature ideas, or report bugs, use the **Issues** section of this [GitHub repo](https://github.com/).
