@@ -1,24 +1,32 @@
 # Cribl LogStream on Amazon - Quick Start
-This Quick Start guide was created by [Cribl](https://cribl.io) to help automate the deployment of Cribl LogStream in your AWS environment. These  automated reference deployments use AWS CloudFormation templates to deploy EC2 instances, IAM policies and S3 buckets, following AWS best practices. 
+This Quick Start guide was created by [Cribl](https://cribl.io) to help automate the deployment of [Cribl LogStream](https://cribl.io/logstream/) in your AWS environment. These  automated reference deployments use AWS CloudFormation templates to deploy EC2 instances, IAM policies and S3 buckets, following AWS best practices. 
 
 ## Deployment
 This Quick Start deployment builds a new AWS environment consisting of the infrastructure resources required to provision Cribl LogStream. 
+
+| VPC | ARM64 | x86_64 |
+| --- | ---- | ---- |
+| Deploy in an existing VPC | [Cribl LogStream ARM64](/templates/cribl-single-template-arm64.yaml) | [Cribl LogStream x86_64](/templates/cirbl-single-template.yaml) |
+| Deploy in a new VPC | [Cribl LogStream ARM64](/templates/cribl-single-template-vpc-arm64.yaml) | [Cribl LogStream x86_64](/templates/cribl-single-template-vpc.yaml) |
+
+This deployment takes approximately 10 minutes to complete. For more information and step-by-step deployment instructions, see the [deployment guide]()
+
+## Use Cases
+Cribl LogStream can optimize the collection of :
+ - [VPC Flow Logs](/docs/steps/vpcflowlogs2metrics.md)
+ - [CloudWatch Streaming Metrics](/docs/steps/cloudwatchmetrics.md)  
+ - [CloudTrail logs](/docs/steps/cloudtrail.md) 
+ - [Collect and send to an S3 bucket](/docs/steps/s3bucket.md) 
 
 ## Pricing
 
 You are responsible for the cost of the AWS services used while running this Quick Start reference deployment. There is no additional cost for using the Quick Start. For Cribl LogStream pricing information, see the [Cribl website](https://cribl.io/cribl-logstream-pricing/).
 
-This deployment takes approximately 10 minutes to complete. For more information and step-by-step deployment instructions, see the [deployment guide](https://guide)
-
-## Use Cases
-Cribl LogStream can optimze the collection of VPC Flow Logs and CloudTrail logs from within your AWS environment and send them to any destination. 
-
 ## Architecture
 
 ![Architecture](/docs/images/Cribl_AWS_Single.png)
 
-
-To post feedback, submit feature ideas, or report bugs, use the **Issues** section of this [GitHub repo](https://github.com/).
+To post feedback, submit feature ideas, or report bugs, use the [**Issues**](https://github.com/amiracle/quick-start-cribl/issues) section of this [GitHub repo](https://github.com/amiracle/quick-start-cribl).
 
 To submit code for this Quick Start, see the [AWS Quick Start Contributor's Kit](https://aws-quickstart.github.io/).
 
