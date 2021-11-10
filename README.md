@@ -9,7 +9,7 @@ This Quick Start deployment builds a new AWS environment consisting of the infra
 | Deploy in an existing VPC | [Cribl LogStream ARM64](/templates/cribl-single-template-arm64.yaml) | [Cribl LogStream x86_64](/templates/cirbl-single-template.yaml) |
 | Deploy in a new VPC | [Cribl LogStream ARM64](/templates/cribl-single-template-vpc-arm64.yaml) | [Cribl LogStream x86_64](/templates/cribl-single-template-vpc.yaml) |
 
-This deployment takes approximately 10 minutes to complete. For more information and step-by-step deployment instructions, see the [deployment guide]()
+This deployment takes approximately 10 minutes to complete. For more information and step-by-step deployment instructions, see the [deployment guide](https://github.com/amiracle/quick-start-cribl/blob/main/docs/Cribl%20LogStream%20User%20Deployment%20Guide%20for%20AWS%20-%20Google%20Docs.pdf)
 
 ## Use Cases
 Cribl LogStream can optimize the collection of :
