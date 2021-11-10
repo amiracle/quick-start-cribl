@@ -6,23 +6,13 @@ project:
     - us-east-2
 tests:
   default:
-    template: /Users/kamiloamir/Documents/GitHub/quick-start-cribl/templates/cribl-distributed-template-arm64.yaml
+    template: ./templates/cribl-distributed-template-arm64.yaml
     regions: 
       - us-east-2
     parameters: 
-      leaderSshKeyPair: kamkeyoh
-      workerSshKeyPair: kamkeyoh
-      workerCount: 2
-      customleaderAmiId: ''
-      customworkerAmiId: ''
-      vpcId: vpc-0ca13737b826351fb
-      subnetIds: subnet-08718e341442f3a7d subnet-098b406b9300623ba
-      workerInstanceType: c6g.large    
-      leaderInstanceType: c6g.large    
-      AdditionalPolicies: "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore,arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
-      sshAccessCidr: 0.0.0.0/0
-      webAccessCidr: 0.0.0.0/0
-      QSS3BucketRegion: us-east-2
-      DesiredCapacity: 2
-      MaxSize: 2
-      MinSize: 2
+      sshKeyPair:
+      instanceType:
+      vpcId:
+      subnetId:
+      webAccessCidr:
+      sshAccessCidr:
