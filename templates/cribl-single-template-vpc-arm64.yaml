@@ -122,7 +122,6 @@ Parameters:
     ConstraintDescription: The Quick Start bucket name can include numbers, lowercase
       letters, uppercase letters, and hyphens (-). It cannot start or end with a 
       hyphen (-).
-    #Default: aws-quickstart-cribl-logstream
     Default: aws-quickstart
     Description: Name of the S3 bucket for your copy of the Quick Start assets. 
       Keep the default name unless you are customizing the template. 
@@ -186,7 +185,7 @@ Resources:
             - !Ref 'QSS3BucketRegion'
       Parameters:
         AvailabilityZones: !Join [',', !Ref AvailabilityZones]
-        NumberOfAZs: '1'
+        NumberOfAZs: '2'
         PrivateSubnet1ACIDR: !Ref PrivateSubnet1CIDR
         PrivateSubnet2ACIDR: !Ref PrivateSubnet2CIDR
         PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
