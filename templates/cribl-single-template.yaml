@@ -133,19 +133,19 @@ Conditions:
     - !Ref QSS3BucketName
     - 'aws-quickstart-cribl-logstream'
 Resources:
-  CribleDeploy:
+  CriblDeploy:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
       - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_x86_64_template.yaml
       - S3Bucket: !If
-          - UsingDefaultBucket
-          - !Sub 'aws-quickstart-cribl-logstream-${QSS3BucketRegion}'
-          - !Ref 'QSS3BucketName'
+           - UsingDefaultBucket
+           - !Sub 'aws-quickstart-cribl-logstream-${QSS3BucketRegion}'
+           - !Ref 'QSS3BucketName'
         S3Region: !If
-          - UsingDefaultBucket
-          - !Ref 'AWS::Region'
-          - !Ref 'QSS3BucketRegion' 
+           - UsingDefaultBucket
+           - !Ref 'AWS::Region'
+           - !Ref 'QSS3BucketRegion' 
       Parameters:
         amiId: !Ref amiId
         sshAccessCidr: !Ref sshAccessCidr

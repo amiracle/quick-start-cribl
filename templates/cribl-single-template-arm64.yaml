@@ -133,7 +133,7 @@ Conditions:
     - !Ref QSS3BucketName
     - 'aws-quickstart-cribl-logstream'
 Resources:
-  CribleDeploy:
+  CriblDeploy:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
