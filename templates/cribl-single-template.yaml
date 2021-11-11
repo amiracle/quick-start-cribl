@@ -140,7 +140,7 @@ Resources:
       - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_x86_64_template.yaml
       - S3Bucket: !If
           - UsingDefaultBucket
-          - !Sub 'aws-quickstart-${AWS::Region}'
+          - !Sub 'aws-quickstart-cribl-logstream-${QSS3BucketRegion}'
           - !Ref 'QSS3BucketName'
         S3Region: !If
           - UsingDefaultBucket
