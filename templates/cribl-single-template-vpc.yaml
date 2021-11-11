@@ -23,6 +23,7 @@ Metadata:
           - AdditionalPolicies
           - sshAccessCidr
           - webAccessCidr
+          - subnetId
       - Label:
           default: AWS Quick Start configuration
         Parameters:
@@ -214,7 +215,7 @@ Resources:
           - Outputs.VPCID
         subnetId: !GetAtt
           - VPCStack
-          - Outputs.PublicSubnet1CIDR
+          - Outputs.PublicSubnet1ID
         instanceType: !Ref instanceType
         sshKeyPair: !Ref sshKeyPair
         AdditionalPolicies: !Join 

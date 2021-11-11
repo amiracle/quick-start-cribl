@@ -214,7 +214,7 @@ Resources:
           - Outputs.VPCID
         subnetId: !GetAtt
           - VPCStack
-          - Outputs.PublicSubnet1CIDR
+          - Outputs.PublicSubnet1ID
         instanceType: !Ref instanceType
         sshKeyPair: !Ref sshKeyPair
         AdditionalPolicies: !Join 
