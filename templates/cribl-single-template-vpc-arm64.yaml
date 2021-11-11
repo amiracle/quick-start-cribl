@@ -192,7 +192,7 @@ Resources:
         PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
         VPCCIDR: !Ref VPCCIDR
         VPCTenancy: !Ref VPCTenancy
-  CribleDeploy:
+  CriblDeploy:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
