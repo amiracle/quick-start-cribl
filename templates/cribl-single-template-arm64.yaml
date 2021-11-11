@@ -73,9 +73,9 @@ Parameters:
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
     Description: "REQUIRED: The CIDR IP range permitted to access the LogStream web console. We recommend you set this value to a trusted IP range."
   instanceType:
-    Description: EC2 instance type to provision the LogStream instance. If none specified, c5.2xlarge will be used.
+    Description: EC2 instance type to provision the LogStream instance. If none specified, c6g.2xlarge will be used.
     Type: String
-    Default: c5.2xlarge
+    Default: c6g.2xlarge
     AllowedValues:
       - c6g.large
       - c6g.xlarge

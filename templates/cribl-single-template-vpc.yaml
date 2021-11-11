@@ -182,6 +182,7 @@ Resources:
           S3Region: !If
             - UsingDefaultBucket
             - !Ref 'AWS::Region'
+            - !Ref 'QSS3BucketRegion'
       Parameters:
         AvailabilityZones: !Join [',', !Ref AvailabilityZones]
         NumberOfAZs: '2'
@@ -194,8 +195,16 @@ Resources:
   CribleDeploy:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub
+      TemplateURL: !Sub 
       - https://aws-quickstart-cribl-logstream-${AWS::Region}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_x86_64_template.yaml
+      - S3Bucket: !If
+           - UsingDefaultBucket
+           - !Sub 'aws-quickstart-${AWS::Region}'
+           - !Ref 'QSS3BucketName'
+        S3Region: !If
+           - UsingDefaultBucket
+           - !Ref 'AWS::Region'
+           - !Ref 'QSS3BucketRegion'  
       Parameters:
         amiId: !Ref amiId
         sshAccessCidr: !Ref sshAccessCidr
