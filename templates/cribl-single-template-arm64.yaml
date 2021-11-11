@@ -112,7 +112,7 @@ Parameters:
       See https://aws-quickstart.github.io/option1.html.
     Type: String
   QSS3BucketRegion:
-    Default: 'AWS::Region'
+    Default: 'us-west-2'
     Description: The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.
     Type: String
   QSS3KeyPrefix:
@@ -137,11 +137,15 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub
-      - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_arm64_template.yaml
+      - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_arm64_template.yaml
       - S3Bucket: !If
-            - UsingDefaultBucket
-            - !Sub 'aws-quickstart-cribl-logstream-${AWS::Region}'
-            - !Ref 'QSS3BucketName'
+           - UsingDefaultBucket
+           - !Sub 'aws-quickstart-cribl-logstream-${AWS::Region}'
+           - !Ref 'QSS3BucketName'
+        S3Region: !If
+           - UsingDefaultBucket
+           - !Ref 'AWS::Region'
+           - !Ref 'QSS3BucketRegion' 
       Parameters:
         amiId: !Ref amiId
         sshAccessCidr: !Ref sshAccessCidr

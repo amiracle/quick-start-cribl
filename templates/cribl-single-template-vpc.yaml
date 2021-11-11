@@ -122,7 +122,8 @@ Parameters:
     ConstraintDescription: The Quick Start bucket name can include numbers, lowercase
       letters, uppercase letters, and hyphens (-). It cannot start or end with a 
       hyphen (-).
-    Default: aws-quickstart-cribl-logstream
+    #Default: aws-quickstart-cribl-logstream
+    Default: aws-quickstart
     Description: Name of the S3 bucket for your copy of the Quick Start assets. 
       Keep the default name unless you are customizing the template. 
       Changing the name updates code references to point to a new Quick 
@@ -196,7 +197,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub 
-      - https://aws-quickstart-cribl-logstream-${AWS::Region}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_x86_64_template.yaml
+      - https://${S3Bucket}-cribl-logstream-${S3Region}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_x86_64_template.yaml
       - S3Bucket: !If
            - UsingDefaultBucket
            - !Sub 'aws-quickstart-${AWS::Region}'
