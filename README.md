@@ -16,13 +16,13 @@ This Quick Start deployment builds a new AWS environment consisting of the infra
 | Deploy in new VPC with Flow Logs to s3 enabled | [Cribl LogStream ARM64](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/template?stackName=Cribl-LogStream&templateURL=https://aws-quickstart-cribl-logstream-us-west-2.s3.us-west-2.amazonaws.com/logstream/cribl-single-template-vpc-logging-arm64.yaml) | [Cribl LogStream x86_64](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/template?stackName=Cribl-LogStream&templateURL=https://aws-quickstart-cribl-logstream-us-west-2.s3.us-west-2.amazonaws.com/logstream/cribl-single-template-vpc-logging.yaml) |
 
 4. Deploy the stack in your environment, make sure to check the region as this defaults to **Oregon (us-west-2)**. 
-5. Log into Cribl LogStream with the credential supplied in the "Outputs" tab on your CloudFormation stack.
+5. Log into Cribl LogStream with the credential supplied in the nested **CriblDeploy** "Outputs" tab on your CloudFormation stack.
 
 ---
 >#### Tips for Deployment
 >An SSH key pair to log into your EC2 instance. Please follow [this guide for help on creating your key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html).
 
->By default this CloudFormation template will deploy in Oregon (us-west-2), but if you want to change the region simply change the region in your CloudFormation drop down and then in the template itself update the QSS3BucketRegion variable from us-west-2 to your region of choice.
+>By default this CloudFormation template will deploy in **Oregon (us-west-2)**, but if you want to change the region simply change the region in your CloudFormation drop down and then in the template itself update the ***QSS3BucketRegion*** variable from ***us-west-2*** to your region of choice.
 This deployment takes approximately 10 minutes to complete. For more information and step-by-step deployment instructions, see the [deployment guide](https://github.com/amiracle/quick-start-cribl/blob/main/docs/Cribl%20LogStream%20User%20Deployment%20Guide%20for%20AWS%20-%20Google%20Docs.pdf)
 ---
 
