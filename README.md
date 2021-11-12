@@ -24,6 +24,8 @@ This Quick Start deployment builds a new AWS environment consisting of the infra
 
 >By default this CloudFormation template will deploy in **Oregon (us-west-2)**, but if you want to change the region simply change the region in your CloudFormation drop down and then in the template itself update the ***QSS3BucketRegion*** variable from ***us-west-2*** to your region of choice.
 This deployment takes approximately 10 minutes to complete. For more information and step-by-step deployment instructions, see the [deployment guide](https://github.com/amiracle/quick-start-cribl/blob/main/docs/Cribl%20LogStream%20User%20Deployment%20Guide%20for%20AWS%20-%20Google%20Docs.pdf)
+
+>Make sure to select TWO Availability Zones (AZ) for your deployment. Selecting one will cause the template to fail.
 ---
 
 ## Use Cases
