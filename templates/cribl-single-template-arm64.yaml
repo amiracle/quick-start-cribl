@@ -3,7 +3,7 @@ Description: Cribl LogStream Existing VPC QuickStart Deployment arm64 (qs-1s9hhq
 Metadata:
   QuickStartDocumentation:
     EntrypointName: Launch into an existing VPC
-    Order: 2
+    Order: 1
   LICENSE: Apache License, Version 2.0
   'AWS::CloudFormation::Interface':
     ParameterGroups:
