@@ -2,8 +2,8 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Cribl LogStream+VPC QuickStart Deployment arm64 (qs-1s9hhq8an)
 Metadata:
   QuickStartDocumentation:
-    EntrypointName: "Launch into a new VPC"
-    Order: 1
+    EntrypointName: "Launch into a new VPC with VPC Flow Logs Enabled"
+    Order: 3
   LICENSE: Apache License, Version 2.0 
   'AWS::CloudFormation::Interface':
     ParameterGroups:
