@@ -143,12 +143,10 @@ Resources:
            - !Ref 'AWS::Region'
            - !Ref 'QSS3BucketRegion' 
       Parameters:
-        sshAccessCidr: !Ref sshAccessCidr
         webAccessCidr: !Ref webAccessCidr
         vpcId: !Ref vpcId
         subnetId: !Ref subnetId
         instanceType: !Ref instanceType
-        sshKeyPair: !Ref sshKeyPair
         AdditionalPolicies: !Join 
           - ','
           - !Ref AdditionalPolicies
