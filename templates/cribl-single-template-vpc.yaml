@@ -13,6 +13,7 @@ Metadata:
           - AvailabilityZones
           - VPCCIDR
           - PublicSubnet1CIDR
+          - PublicSubnet2CIDR
           - VPCTenancy
       - Label:
           default: Amazon EC2 configuration
@@ -20,7 +21,6 @@ Metadata:
           - instanceType
           - AdditionalPolicies
           - webAccessCidr
-          - subnetId
       - Label:
           default: AWS Quick Start configuration
         Parameters:
@@ -207,9 +207,10 @@ Resources:
         vpcId: !GetAtt
           - VPCStack
           - Outputs.VPCID
-        subnetId: !GetAtt
+        subnetIds: !GetAtt
           - VPCStack
           - Outputs.PublicSubnet1ID
+          - Outputs.PublicSubnet2ID
         instanceType: !Ref instanceType
         AdditionalPolicies: !Join 
           - ','

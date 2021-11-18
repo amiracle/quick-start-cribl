@@ -13,6 +13,7 @@ Metadata:
           - AvailabilityZones
           - VPCCIDR
           - PublicSubnet1CIDR
+          - PublicSubnet2CIDR
           - VPCTenancy
       - Label:
           default: Amazon EC2 configuration
@@ -37,6 +38,8 @@ Metadata:
         default: Availability Zones
       PublicSubnet1CIDR:
         default: Public subnet 1 CIDR
+      PublicSubnet2CIDR:
+        default: Public subnet 2 CIDR
       VPCTenancy:
         default: VPC tenancy
       VPCCIDR:
@@ -343,9 +346,10 @@ Resources:
         vpcId: !GetAtt
           - VPCStack
           - Outputs.VPCID
-        subnetId: !GetAtt
+        subnetIds: !GetAtt
           - VPCStack
           - Outputs.PublicSubnet1ID
+          - Outputs.PublicSubnet2ID
         instanceType: !Ref instanceType
         AdditionalPolicies: !Join 
           - ','
