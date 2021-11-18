@@ -17,12 +17,10 @@ Metadata:
       - Label:
           default: Amazon EC2 configuration
         Parameters:
-          - sshKeyPair
           - amiId
+          - webAccessCidr
           - instanceType
           - AdditionalPolicies
-          - sshAccessCidr
-          - webAccessCidr
       - Label:
           default: Flow Logs Parameters
         Parameters:
@@ -46,8 +44,6 @@ Metadata:
         default: VPC tenancy
       VPCCIDR:
         default: VPC CIDR
-      sshKeyPair:
-        default: SSH Key Name
       instanceType:
         default: EC2 Instance Type
       QSS3BucketName:
@@ -63,9 +59,6 @@ Parameters:
   AvailabilityZones:
     Description: List of Availability Zones to use for the subnets in the VPC.
     Type: 'List<AWS::EC2::AvailabilityZone::Name>'
-  sshKeyPair:
-    Description: "REQUIRED: Name of an existing EC2 key pair."
-    Type: 'AWS::EC2::KeyPair::KeyName'
   instanceType:
     Description: EC2 instance type to provision the LogStream instance. If none specified, c6g.2xlarge will be used.
     Type: String
@@ -170,16 +163,10 @@ Parameters:
       See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html 
       and https://aws-quickstart.github.io/option1.html.
     Type: String
-  sshAccessCidr:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
-    Description: Allowed CIDR block for external SSH access to the bastions
-    Type: String
-    Default: 0.0.0.0/0
   webAccessCidr:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
-    Description: Allowed CIDR block for external SSH access to the bastions
+    Description:  "REQUIRED: The CIDR IP range permitted to access the LogStream web console. We recommend you set this value to a trusted IP range."
     Type: String
     Default: 0.0.0.0/0
   VPCCIDR:
@@ -360,7 +347,6 @@ Resources:
             - !Ref 'QSS3BucketRegion'  
       Parameters:
         amiId: !Ref amiId
-        sshAccessCidr: !Ref sshAccessCidr
         webAccessCidr: !Ref webAccessCidr
         vpcId: !GetAtt
           - VPCStack
@@ -369,7 +355,6 @@ Resources:
           - VPCStack
           - Outputs.PublicSubnet1ID
         instanceType: !Ref instanceType
-        sshKeyPair: !Ref sshKeyPair
         AdditionalPolicies: !Join 
           - ','
           - !Ref AdditionalPolicies

@@ -12,13 +12,11 @@ Metadata:
         Parameters:
           - vpcId
           - subnetId
-          - sshAccessCidr
           - webAccessCidr
           - amiId
       - Label:
           default: Amazon EC2 configuration
         Parameters:
-          - sshKeyPair
           - instanceType
           - AdditionalPolicies
       - Label:
@@ -30,8 +28,6 @@ Metadata:
     ParameterLabels:
       amiId:
         default: AMI ID for custom work
-      sshKeyPair:
-        default: SSH Key Name
       instanceType:
         default: EC2 Instance Type
       vpcId:
@@ -39,9 +35,7 @@ Metadata:
       subnetId:
         default: Subnet ID
       webAccessCidr:
-        default: Web Access CIDR
-      sshAccessCidr:
-        default: SSH Access CIDR      
+        default: Web Access CIDR   
       QSS3BucketName:
         default: Quick Start S3 bucket name
       QSS3KeyPrefix:
@@ -53,20 +47,12 @@ Parameters:
     Description: "Optional if sent an AMI to use by Cribl Support"
     Type: String
     Default: ''
-  sshKeyPair:
-    Description: "REQUIRED: Name of an existing EC2 key pair."
-    Type: AWS::EC2::KeyPair::KeyName
   vpcId:
     Description: "REQUIRED: ID of your existing VPC."
     Type: AWS::EC2::VPC::Id
   subnetId:
     Description: "REQUIRED: ID of one of your existing Subnet IDs. This subnet must be in the same VPC as VPC ID above."
     Type: AWS::EC2::Subnet::Id
-  sshAccessCidr:
-    Type: String
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
-    Description: "REQUIRED: CIDR IP range permitted to SSH access to the instance. We recommend you set this value to a trusted IP range."
   webAccessCidr:
     Type: String
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
@@ -165,12 +151,10 @@ Resources:
            - !Ref 'QSS3BucketRegion' 
       Parameters:
         amiId: !Ref amiId
-        sshAccessCidr: !Ref sshAccessCidr
         webAccessCidr: !Ref webAccessCidr
         vpcId: !Ref vpcId
         subnetId: !Ref subnetId
         instanceType: !Ref instanceType
-        sshKeyPair: !Ref sshKeyPair
         AdditionalPolicies: !Join 
           - ','
           - !Ref AdditionalPolicies
