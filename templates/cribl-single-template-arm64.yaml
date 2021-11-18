@@ -133,7 +133,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub 
-      - 'https://${S3Bucket}-${QSS3BucketRegion}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_arm64_template.yaml'
+      - 'https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_arm64_template.yaml'
       - S3Bucket: !If
            - UsingDefaultBucket
            - !Sub 'aws-quickstart-cribl-logstream-${QSS3BucketRegion}'
