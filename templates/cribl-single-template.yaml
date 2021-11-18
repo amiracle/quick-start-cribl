@@ -145,7 +145,7 @@ Resources:
       Parameters:
         webAccessCidr: !Ref webAccessCidr
         vpcId: !Ref vpcId
-        VPCZoneIdentifier:
+        subnetIds:
           - !Select [0, !Ref subnetIds]
           - !Select [1, !Ref subnetIds]
         instanceType: !Ref instanceType
