@@ -124,24 +124,20 @@ Parameters:
       See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html 
       and https://aws-quickstart.github.io/option1.html.
     Type: String
-#Conditions:
-#  UsingDefaultBucket: !Equals
-#    - !Ref QSS3BucketName
-#    - 'aws-quickstart-cribl-logstream'
+Conditions:
+  UsingDefaultBucket: !Equals
+    - !Ref QSS3BucketName
+    - 'aws-quickstart-cribl-logstream'
 Resources:
   CriblDeploy:
     Type: AWS::CloudFormation::Stack
     Properties:
-    Properties:
-      TemplateURL: !Sub 'https://${QSS3BucketName}-${QSS3BucketRegion}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_arm64_template.yaml'
-#      - S3Bucket: !If
-#           - UsingDefaultBucket
-#           - !Sub 'aws-quickstart-cribl-logstream-${QSS3BucketRegion}'
-#           - !Ref 'QSS3BucketName'
-#        S3Region: !If
-#           - UsingDefaultBucket
-#           - !Ref 'AWS::Region'
-#           - !Ref 'QSS3BucketRegion' 
+      TemplateURL: !Sub 
+      - 'https://${S3Bucket}-${QSS3BucketRegion}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_arm64_template.yaml'
+      - S3Bucket: !If
+           - UsingDefaultBucket
+           - !Sub 'aws-quickstart-cribl-logstream-${QSS3BucketRegion}'
+           - !Ref QSS3BucketName
       Parameters:
         webAccessCidr: !Ref webAccessCidr
         vpcId: !Ref vpcId
