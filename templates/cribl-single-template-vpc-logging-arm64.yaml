@@ -17,7 +17,6 @@ Metadata:
       - Label:
           default: Amazon EC2 configuration
         Parameters:
-          - amiId
           - webAccessCidr
           - instanceType
           - AdditionalPolicies
@@ -34,8 +33,6 @@ Metadata:
           - QSS3KeyPrefix
           - QSS3BucketRegion
     ParameterLabels:
-      amiId:
-        default: AMI ID for custom work
       AvailabilityZones:
         default: Availability Zones
       PublicSubnet1CIDR:
@@ -52,10 +49,6 @@ Metadata:
         default: Quick Start S3 key prefix  
   cfn-lint: { config: { ignore_checks: [E9007] } }
 Parameters:
-  amiId:
-    Description: "Optional if sent an AMI to use by Cribl Support"
-    Type: String
-    Default: ''
   AvailabilityZones:
     Description: List of Availability Zones to use for the subnets in the VPC.
     Type: 'List<AWS::EC2::AvailabilityZone::Name>'
@@ -346,7 +339,6 @@ Resources:
             - !Ref 'AWS::Region'
             - !Ref 'QSS3BucketRegion'  
       Parameters:
-        amiId: !Ref amiId
         webAccessCidr: !Ref webAccessCidr
         vpcId: !GetAtt
           - VPCStack
