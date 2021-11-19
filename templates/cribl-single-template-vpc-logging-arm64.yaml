@@ -342,7 +342,6 @@ Resources:
             - !Ref 'AWS::Region'
             - !Ref 'QSS3BucketRegion'  
       Parameters:
-        AvailabilityZones: !Join [',', !Ref AvailabilityZones]
         webAccessCidr: !Ref webAccessCidr
         vpcId: !GetAtt
           - VPCStack

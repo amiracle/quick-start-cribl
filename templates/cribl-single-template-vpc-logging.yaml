@@ -159,8 +159,6 @@ Parameters:
       See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html 
       and https://aws-quickstart.github.io/option1.html.
     Type: String
-    Type: String
-    Default: 0.0.0.0/0
   webAccessCidr:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
@@ -344,7 +342,6 @@ Resources:
             - !Ref 'AWS::Region'
             - !Ref 'QSS3BucketRegion'  
       Parameters:
-        AvailabilityZones: !Join [',', !Ref AvailabilityZones]
         webAccessCidr: !Ref webAccessCidr
         vpcId: !GetAtt
           - VPCStack
