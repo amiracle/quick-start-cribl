@@ -344,13 +344,15 @@ Resources:
             - !Ref 'AWS::Region'
             - !Ref 'QSS3BucketRegion'  
       Parameters:
+        AvailabilityZones: !Join [',', !Ref AvailabilityZones]
         webAccessCidr: !Ref webAccessCidr
         vpcId: !GetAtt
           - VPCStack
           - Outputs.VPCID
-        subnetIds: !GetAtt 
-          - VPCStack
-          - Outputs.PublicSubnet1ID
+        subnetIds: !Join
+          - ','
+          - - !GetAtt VPCStack.Outputs.PublicSubnet1ID
+            - !GetAtt VPCStack.Outputs.PublicSubnet2ID
         instanceType: !Ref instanceType
         AdditionalPolicies: !Join 
           - ','
