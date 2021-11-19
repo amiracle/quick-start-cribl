@@ -32,6 +32,8 @@ Metadata:
         default: Availability Zones
       PublicSubnet1CIDR:
         default: Public subnet 1 CIDR
+      PublicSubnet2CIDR:
+        default: Public subnet 2 CIDR        
       VPCTenancy:
         default: VPC tenancy
       VPCCIDR:
@@ -52,22 +54,22 @@ Parameters:
     Type: String
     Default: c5.2xlarge
     AllowedValues:
-      - c5.4xlarge
-      - c5.2xlarge
-      - c5.xlarge
       - c5.large
-      - c5d.4xlarge
-      - c5d.2xlarge
-      - c5d.xlarge
+      - c5.xlarge
+      - c5.2xlarge
+      - c5.4xlarge
       - c5d.large
-      - c5a.4xlarge
-      - c5a.2xlarge
-      - c5a.xlarge
+      - c5d.xlarge
+      - c5d.2xlarge
+      - c5d.4xlarge
       - c5a.large
-      - c5ad.4xlarge
-      - c5ad.2xlarge
-      - c5ad.xlarge
+      - c5a.xlarge
+      - c5a.2xlarge
+      - c5a.4xlarge
       - c5ad.large
+      - c5ad.xlarge
+      - c5ad.2xlarge
+      - c5ad.4xlarge
     ConstraintDescription: Must contain valid instance type
   AdditionalPolicies:
     Default:  "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore,arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
@@ -196,7 +198,7 @@ Resources:
       - https://${S3Bucket}-cribl-logstream-${S3Region}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_x86_64_template.yaml
       - S3Bucket: !If
            - UsingDefaultBucket
-           - !Sub 'aws-quickstart'
+           - !Sub 'aws-quickstart-cribl-logstream'
            - !Ref 'QSS3BucketName'
         S3Region: !If
            - UsingDefaultBucket
