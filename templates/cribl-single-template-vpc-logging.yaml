@@ -348,10 +348,9 @@ Resources:
         vpcId: !GetAtt
           - VPCStack
           - Outputs.VPCID
-        subnetIds: !GetAtt
-          - VPCStack
-          - Outputs.PublicSubnet1ID
-          - Outputs.PublicSubnet2ID
+        subnetIds: !Join
+          - ','
+          - [ !GetAtt VPCStack.Outputs.PublicSubnet1ID, Outputs.PublicSubnet2ID]
         instanceType: !Ref instanceType
         AdditionalPolicies: !Join 
           - ','

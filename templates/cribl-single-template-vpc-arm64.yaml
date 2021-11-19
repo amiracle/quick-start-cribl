@@ -14,6 +14,8 @@ Metadata:
           - VPCCIDR
           - PublicSubnet1CIDR
           - PublicSubnet2CIDR
+          - PrivateSubnet1CIDR
+          - PrivateSubnet2CIDR
           - VPCTenancy
       - Label:
           default: Amazon EC2 configuration
@@ -34,6 +36,10 @@ Metadata:
         default: Public subnet 1 CIDR
       PublicSubnet2CIDR:
         default: Public subnet 2 CIDR
+      PrivateSubnet1CIDR:
+        default: Private subnet 1 CIDR
+      PrivateSubnet2CIDR:
+        default: Private subnet 2 CIDR
       VPCTenancy:
         default: VPC tenancy
       VPCCIDR:
@@ -199,7 +205,7 @@ Resources:
         - https://${S3Bucket}-cribl-logstream-${S3Region}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_arm64_template.yaml
         - S3Bucket: !If
             - UsingDefaultBucket
-            - !Sub 'aws-quickstart-cribl-logstream'
+            - !Sub 'aws-quickstart'
             - !Ref 'QSS3BucketName'
           S3Region: !If
             - UsingDefaultBucket
@@ -210,10 +216,9 @@ Resources:
         vpcId: !GetAtt
           - VPCStack
           - Outputs.VPCID
-        subnetIds: !GetAtt
-          - VPCStack
-          - Outputs.PublicSubnet1ID
-          - Outputs.PublicSubnet2ID
+        subnetIds: !Join
+          - ','
+          - [ !GetAtt VPCStack.Outputs.PublicSubnet1ID, Outputs.PublicSubnet2ID]
         instanceType: !Ref instanceType
         AdditionalPolicies: !Join 
           - ','
