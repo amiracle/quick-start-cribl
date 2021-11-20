@@ -223,7 +223,9 @@ Resources:
             - !Ref 'AWS::Region'
             - !Ref 'QSS3BucketRegion'
       Parameters:
-        AvailabilityZones: !Join [',', !Ref AvailabilityZones]
+        AvailabilityZones: !Join 
+          - ','
+          - !Ref AvailabilityZones
         NumberOfAZs: '2'
         PrivateSubnet1ACIDR: !Ref PrivateSubnet1CIDR
         PrivateSubnet2ACIDR: !Ref PrivateSubnet2CIDR
