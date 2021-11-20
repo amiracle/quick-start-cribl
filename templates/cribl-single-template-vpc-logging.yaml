@@ -60,22 +60,22 @@ Parameters:
     Type: String
     Default: c5.2xlarge
     AllowedValues:
-      - c5.4xlarge
-      - c5.2xlarge
-      - c5.xlarge
       - c5.large
-      - c5d.4xlarge
-      - c5d.2xlarge
-      - c5d.xlarge
+      - c5.xlarge
+      - c5.2xlarge
+      - c5.4xlarge
       - c5d.large
-      - c5a.4xlarge
-      - c5a.2xlarge
-      - c5a.xlarge
+      - c5d.xlarge
+      - c5d.2xlarge
+      - c5d.4xlarge
       - c5a.large
-      - c5ad.4xlarge
-      - c5ad.2xlarge
-      - c5ad.xlarge
+      - c5a.xlarge
+      - c5a.2xlarge
+      - c5a.4xlarge
       - c5ad.large
+      - c5ad.xlarge
+      - c5ad.2xlarge
+      - c5ad.4xlarge
     ConstraintDescription: Must contain valid instance type
   AdditionalPolicies:
     Default:  "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore,arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
@@ -130,10 +130,10 @@ Parameters:
     Description: The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.
     Type: String
     AllowedValues:
-      - us-west-2
       - us-east-1
       - us-east-2
       - us-west-1
+      - us-west-2
       - eu-north-1
       - ap-south-1
       - eu-west-3

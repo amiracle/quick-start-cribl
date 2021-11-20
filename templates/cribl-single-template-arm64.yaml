@@ -95,10 +95,10 @@ Parameters:
     Description: The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.
     Type: String
     AllowedValues:
-      - us-west-2
       - us-east-1
       - us-east-2
       - us-west-1
+      - us-west-2
       - eu-north-1
       - ap-south-1
       - eu-west-3
@@ -110,7 +110,7 @@ Parameters:
       - ca-central-1
       - ap-southeast-1
       - ap-southeast-2
-      - eu-central-1 
+      - eu-central-1
   QSS3KeyPrefix:
     AllowedPattern: ^([0-9a-zA-Z-.]+/)*$
     ConstraintDescription: The Quick Start S3 key prefix can include numbers, lowercase letters,
