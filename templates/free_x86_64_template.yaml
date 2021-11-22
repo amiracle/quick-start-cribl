@@ -243,7 +243,6 @@ Resources:
           Fn::Sub:
             - |
               #cloud-config
-
               runcmd:
                 - /usr/local/bin/configure_logstream.sh -m single -b ${s3DefaultDestinationBucket}
                 - sleep 10
