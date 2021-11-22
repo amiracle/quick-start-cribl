@@ -37,7 +37,7 @@ Metadata:
         default: Quick Start S3 bucket name
       QSS3KeyPrefix:
         default: Quick Start S3 key prefix  
-  cfn-lint: { config: { ignore_checks: [E9007] } }
+  #cfn-lint: { config: { ignore_checks: [E9007] } }
 
 Parameters:
   vpcId:
@@ -132,7 +132,6 @@ Resources:
   CriblDeploy:
     Type: AWS::CloudFormation::Stack
     Properties:
-#      TemplateURL: https://aws-quickstart-cribl-logstream-us-west-2.s3.us-west-2.amazonaws.com/logstream/free_x86_64_template.yaml
       TemplateURL: !Sub 
       - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_arm64_template.yaml
       - S3Bucket: !If

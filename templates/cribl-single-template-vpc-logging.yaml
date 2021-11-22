@@ -14,6 +14,8 @@ Metadata:
           - VPCCIDR
           - PublicSubnet1CIDR
           - PublicSubnet2CIDR
+          - PrivateSubnet1CIDR
+          - PrivateSubnet2CIDR
           - VPCTenancy
       - Label:
           default: Amazon EC2 configuration
@@ -39,7 +41,11 @@ Metadata:
       PublicSubnet1CIDR:
         default: Public subnet 1 CIDR
       PublicSubnet2CIDR:
-        default: Public subnet 2 CIDR      
+        default: Public subnet 2 CIDR
+      PrivateSubnet1CIDR:
+        default: Private subnet 1 CIDR
+      PrivateSubnet2CIDR:
+        default: Private subnet 2 CIDR        
       VPCTenancy:
         default: VPC tenancy
       VPCCIDR:
