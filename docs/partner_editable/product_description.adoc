@@ -1,0 +1,11 @@
+// Replace the content in <>
+// Briefly describe the software. Use consistent and clear branding. 
+// Include the benefits of using the software on AWS, and provide details on usage scenarios.
+
+This will deploy a single EC2 instance and configure the AWS services and resources listed above. We will be using this deployment for our quick start guide.
+
+Cribl LogStream Single-Instance is designed for customers who want to validate to make sure our solution will fulfill their requirements. This solution can also be used for testing and development purposes. If you have a small workload, this solution might be sufficient for production; its capacity will be limited by the amount of resources available. Please refer to Cribl's latest sizing and scaling guide: https://docs.cribl.io/docs/scaling .
+
+An AWS Marketplace subscription is required for production use of the Cribl LogStream AMI. The default deployment of Cribl LogStream is the Free option. 
+
+As an alternative, you can Bring Your Own License (BYOL) – subscribe through AWS Marketplace, and apply an existing LogStream license. This is generally appropriate for deployments with extremely heavy usage, abnormal access patterns, or other concerns. Please contact us directly to order a license at sales@cribl.io. 

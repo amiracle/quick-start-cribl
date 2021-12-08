@@ -1,0 +1,166 @@
+// Add steps as necessary for accessing the software, post-configuration, and testing. Don’t include full usage instructions for your software, but add links to your product documentation for that information.
+//Should any sections not be applicable, remove them
+
+== Post-deployment steps
+// If post-deployment steps are required, add them here. If not, remove the heading
+
+=== Log into the Cribl LogStream instance's Web UI: 
+. Locate your instance Public IP Address and log into your instance:
+--
+ http://cribl_instance_public_ip:9000
+
+username: admin
+password: ec2-instance 
+--
+image::../images/screenshots/login.png[CriblLogin,width=75%,height=75%]
+
+== Use Cases
+
+=== VPC Flow Logs
+This use case is to get VPC Flow logs into your system of record and then convert the log events to metric data. This is based on the excellent blog post (https://cribl.io/blog/practical-logs-to-metrics-conversion-with-cribl/) by one of the Cribl Co-Founders Dritran Bitincka. There are two ways to collect VPCFlow Logs, depending on cost and latency concerns, you might want to go one way or the other. First, if cost is an issue and you don't mind receiving the data after a few minutes, collecting the logs via S3 is the best approach. However, if you need the logs more quickly, then pushing the data from CloudWatch Logs to an HTTP endpoint would be the recommended approach. There is a higher cost for going down this route which is explained here. https://github.com/amiracle/quick-start-cribl/blob/main/docs/steps/vpcflowlogs2metrics.md
+
+=== CloudWatch Streaming Metrics
+This use case will cover collecting metrics from AWS CloudWatch using their streaming feature via S3 buckets. Follow the steps in the AWS Post to enable your CloudWatch Streaming Metrics. https://aws.amazon.com/blogs/aws/cloudwatch-metric-streams-send-aws-metrics-to-partners-and-to-your-apps-in-real-time/ | Here is a link to the steps https://github.com/amiracle/quick-start-cribl/blob/main/docs/steps/cloudwatchmetrics.md 
+
+=== CloudTrail logs
+This use case is to get CloudTrail logs into your system of record. We will go over some tips to help reduce the volume of these events by removing redundant or null values and other events that take up significant space while not giving any value. In this blog post Helping Threat Hunters While Staying Compliant: Categorizing and Scoring AWS CloudTrail Events in Real-Time, we will go into detail on how to help reduce the amount of redundant and high volume, low value data from CloudTrail logs. https://github.com/amiracle/quick-start-cribl/blob/main/docs/steps/cloudtrail.md 
+
+=== Collect and send to an S3 bucket
+This use case will show you how to setup Cribl LogStream to send data from any source to an S3 bucket. The CloudFormation template from the AWS Marketplace listing automatically creates an S3 bucket with an IAM policy that allows reading from and writing to the bucket. The AWS side of this deployment has already been configured, we only need to setup a route and pipeline in Cribl LogStream to send the data to the bucket. https://github.com/amiracle/quick-start-cribl/blob/main/docs/steps/s3bucket.md 
+
+== Best practices for using {partner-product-short-name} on AWS
+// Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
+
+=== Backup
+Cribl LogStream integrates with Git clients and remote repositories to provide version control of LogStream's configuration. This integration offers backup and rollback for single-instance and distributed deployments.
+
+These options are separate from the Git repo responsible for version control of Worker configurations, located on the leader Node in distributed deployments. We cover all these options and requirements in our documentation: https://docs.cribl.io/docs/version-control. 
+Instance Failure
+
+== Leader Nodes
+In case a leader Node fails, the Worker Nodes will continue to process data, but no updates will be sent to the Worker Nodes. The Worker Nodes will work independently of the leader Node until a new leader Node comes back online. 
+
+== Worker Nodes
+Workers will periodically (every 10 seconds) send a heartbeat to the leader. This heartbeat includes information about themselves, and a set of current system metrics. The heartbeat payload includes facts – such as hostname, IP address, GUID, tags, environment variables, current software/configuration version, etc. – that the leader tracks with the connection.
+
+The failure of a Worker Node to successfully send two consecutive heartbeat messages to the leader will cause the respective Worker to be removed from the Workers page in the leader's UI until the leader receives a heartbeat message from the affected Worker.
+
+When a Worker Node checks in with the leader:
+
+1. The Worker sends a heartbeat to the leader.
+2. The leader uses the Worker’s facts and Mapping Rules to map it to a Worker Group.
+3. The Worker Node pulls its Group's updated configuration bundle, if necessary.
+4. Please follow these instructions for Load Balancer and Auto Scaling group settings: https://docs.cribl.io/docs/deploy-distributed#auto-scaling-workers-and-load-balancing-incoming-data 
+
+== Availability-Zone Failure
+Worker Nodes in failed availability-zones will be replaced by the Auto Scaling group to meet the load of data being processed. In < 15 minutes, the Auto Scaling group will re-create the number of instances required to handle the incoming traffic. 
+
+During a restart, to minimize ingestion disruption and to increase availability of network ports, Worker Processes on a Worker Node are restarted in a rolling fashion. Specifically, 20% of running processes – with a minimum of one process – are restarted at a time. A Worker Process must come up and report as started before the next one is restarted. This rolling restart continues until all Processes have restarted. If a Worker Process fails to restart, the nodes' configurations will be rolled back.
+
+== Region Failure
+The architecture outlined in this guide does not natively support multi-region operations. Therefore, you must explicitly enable cross-region replication, and must back up your configurations to a git repo that is available in multiple regions. 
+
+Cribl LogStream can be quickly deployed in a new region, and the configurations can be bootstrapped from the git repository, but it will take time for the data streams to cut over, due to DNS / networking updates. 
+
+The time to restore varies with resource availability and network cutover, but a <4-hour recovery time objective (RTO) and <24-hour recovery point objective (RPO) are generally possible. To restore operations in another region:
+
+Leverage the standard AWS CloudFormation templates to re-create the architecture on-demand.
+Restore the configurations, using the git repository with all the configuration commits.
+Update DNS / output settings and point data collectors to the new stack.
+General Failure Considerations
+Make sure to back up LogStream configurations to a git repository, to make recovery and scaling out easier. Please follow the guidance for distributed and single-instance deployments in our documentation: https://docs.cribl.io/docs/version-control 
+
+== Routine Maintenance
+Cribl LogStream leverages git to push updates to the leader Node. The upgrade process is initially the same for single-instance and distributed deployments, although distributed deployments require extra steps to upgrade the Worker Nodes. For detailed information, please refer to the documentation: https://docs.cribl.io/docs/upgrading 
+
+Cribl recommends following the AWS best practices for ongoing tasks, including:
+
+* Access key rotation
+* Service limit evaluations
+* Certificate renewals
+
+==== Standalone/Single-Instance
+This path requires upgrading only the single/standalone node:
+
+* Stop Cribl LogStream.
+
+* Uncompress the new version on top of the old one.
+
+* On some Linux systems, tar might complain with: "cribl/bin/cribl: Cannot open: File exists." In this case, please remove the cribl/bin/cribl directory if it's empty, and untar again. If you have custom functions in cribl/bin/cribl, please move them under $CRIBL_HOME/local/cribl/functions/ before untarring again.
+
+* Restart LogStream.
+
+==== Distributed Deployment
+For a distributed deployment, the order of upgrade is: Upgrade first the leader Node, then upgrade the Worker Nodes, then commit and deploy the changes on the leader.
+
+* Upgrade the leader Node
+* Commit and deploy your desired last version. (This will be your most recent checkpoint.)
+* Optionally, git push to your configured remote repo.
+* Stop Cribl LogStream.
+
+* Optional, but recommended: Back up the entire $CRIBL_HOME directory.
+
+* Optional: Check that the Worker Nodes are still functioning as expected. In absence of the leader Node, they should continue to work with their 
+last deployed configurations.
+
+* Uncompress the new LogStream version on top of the old one.
+
+* Restart LogStream and log back in.
+
+== Emergency Maintenance
+To help diagnose LogStream problems, you can share a diagnostic bundle with Cribl Support. The bundle contains a snapshot of configuration files and logs at the time the bundle was created, and gives troubleshooters insights into how LogStream was configured and operating at that time.For more information on creating a diagnostic bundle, please refer to our documentation: https://docs.cribl.io/docs/diagnosing 
+
+
+== Security
+// Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
+
+In this section, we discuss the Cribl LogStream default configuration deployed according to this guide, AWS general best practices, and options for securing your solution on AWS. 
+				
+=== IAM Role			
+The CloudFormation template creates an S3 bucket, and an IAM EC2 role that allows your instances to read and write to that specific S3 bucket. The role also allows the EC2 instance to read and collect data from Kinesis Streams within the AWS account. 
+
+=== Encrypting Data at Rest
+By default, no sensitive data is stored on the LogStream Nodes, so it is not necessary to encrypt the data at rest. If required, then data at rest can be encrypted using LUKS full-disk encryption. 
+
+=== Encrypting Data in Motion
+With Cribl LogStream, you can encrypt fields or patterns within events in real time, by using C.Crypto.encrypt() in a Mask function. The Mask function accepts multiple replacement rules, and multiple fields to apply them to.
+
+A Match Regex defines the pattern of content to be replaced. The Replace Expression is a JS expression (or literal) to replace matched content. The C.Crypto.encrypt() method can be used here to generate an encrypted string from a value passed to it. For additional information, please refer our documentation on encryption of data in motion (https://docs.cribl.io/docs/securing-data-encryption). 
+
+=== Amazon Certificate Manager SSL/TLS Certificates
+AWS Certificate Manager (ACM) is a service that lets you easily provision, manage, and deploy Secure Sockets Layer/Transport Layer Security (SSL/TLS) certificates for use with AWS services. SSL/TLS certificates provisioned through AWS Certificate Manager are free. 
+
+If you don't already have an SSL/TLS certificate for your domain name, Cribl recommends that you request one using ACM. For more information about requesting an SSL/TLS certificate using ACM, please read the AWS Certificate Manager User Guide.
+					
+Use ACM to request a certificate or import a certificate into ACM. To use an ACM certificate with CloudFront (optional input parameter), you must request or import the certificate in the US East (N. Virginia) region. To use an ACM certificate with Amazon ELB – Application Load Balancer (optional input parameter), you must request or import the certificate in the region where you create the CloudFormation stack. After you validate ownership of the domain names in your certificate, ACM provisions the certificate. Use the ACM certificate Amazon Resource Name (ARN) as the leader template's optional Amazon CloudFront and/or Public ALB ACM certificate input parameters. 
+				
+You can secure Cribl LogStream's API and UI access by configuring SSL. To do so, you can use your own private keys and certs, or you can generate a pair with OpenSSL, as shown here:
+
+--
+openssl req -nodes -new -x509 -newkey rsa:2048 -keyout myKey.pem -out myCert.pem -days 420
+--
+This command will generate both a self-signed cert (certified for 420 days), and an unencrypted, 2048-bit RSA private key.
+
+In the LogStream UI, you can configure the key and cert via Settings > Encryption Keys and Settings > Certificates. Alternatively, you can edit the local/cribl.yml file's api section to directly set the privKeyPath and certPath attributes. For example:
+--
+cribl.yml
+api:
+  host: 0.0.0.0
+  port: 9000
+  disabled : false
+  ssl:
+    disabled: false
+    privKeyPath: /path/to/myKey.pem
+    certPath: /path/to/myCert.pem
+...
+--
+
+== Other useful information
+//Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
+
+Here are some useful links to get started with Cribl LogStream:
+- Cribl Community : https://cribl.io/community
+- Cribl Resources : https://cribl.io/resources
+- Cribl Docs on Single Instance Deployments : https://docs.cribl.io/docs/deploy-single-instance
+- Cribl Docs on Distributed Deployments : https://docs.cribl.io/docs/deploy-distributed
+- Cribl Docs on sizing and scaling instances : https://docs.cribl.io/docs/scaling
