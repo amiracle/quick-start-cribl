@@ -239,7 +239,7 @@ Resources:
                 Resource: "*"
       Tags:
         - Key: Name
-          Value: Cribl LogStream  IAM role
+          Value: Cribl LogStream IAM role
 
   iamDefaultInstanceProfile:
     Type: AWS::IAM::InstanceProfile
