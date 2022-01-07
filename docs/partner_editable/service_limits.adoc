@@ -8,6 +8,7 @@
 |Security groups | 1
 |AWS Identity and Access Management (IAM) roles | 1
 |Auto Scaling groups | 1
+|Elastic Load Balancer| 1
 |c6g.2xlarge instance | 1
 |===
 

@@ -1,0 +1,16 @@
+project:
+  name: aws-quickstart-cribl-logstream
+  owner: quickstart-eng@amazon.com
+  package_lambda: false
+tests:
+  x86existing:
+    template: templates/cribl-single-template-arm64.yaml
+    regions: 
+      - us-west-2
+    parameters: 
+      instanceType: 
+      vpcId: 
+      subnetIds: 
+      webAccessCidr: '0.0.0.0/0'
+      QSS3BucketName: 'aws-quickstart-cribl-logstream'
+      QSS3KeyPrefix: 'logstream/'

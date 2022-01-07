@@ -15,12 +15,23 @@ For more information, see https://docs.aws.amazon.com/AWSCloudFormation/latest/U
 
 *A.* Launch the Quick Start templates from the links in this guide or from another S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template-size limitations. For more information, see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html[AWS CloudFormation quotas^].
 
+*Q.* Can I deploy this solution in a different region other than *us-west-2* ? 
+
+*A.* Yes, you can deploy in other regions that are supported in the regions listed in this document. To change the region, make sure to select the new region in the CloudFormation drop down in the AWS Console. Then, in the CloudFormation template itself, make sure to specify the region that you selected. 
+
+*Q.* Can I modify the EC2 IAM Policy to include other S3 buckets, Kinesis Streams or other AWS resources for my instance to access? 
+
+*A.* Yes, you can modify the EC2 IAM Policy to include other resources you want the Cribl LogStream instance to access. Please refer to https://docs.cribl.io/logstream/sources-s3#s3-and-sqs-permissions for S3 / SQS permissions and https://docs.cribl.io/logstream/sources-kinesis-streams#authentication for Kinesis permissions.
+
+*Q.* Where can I see the outputs when I deploy a New VPC or New VPC + Logging Cloudformation template?
+*A.* When you deploy this stack, you will actually deploy a **VPC** and **CriblDeploy** templates, just go to the **CriblDeploy** template to see the URL for your Cribl Login. You will still need to use the AMI Instance ID as the password.
+
+*Q.* My instance was rebuilt by the autoscale group and I can no longer log into my instance, what's the new password?
+*A.* When your instance gets rebuilt by the AutoScale Group, the password is reset to the new AMI Instance ID. 
 
 == Troubleshooting
 
-By default this CloudFormation template will deploy in Oregon (us-west-2), but if you want to change the region simply change the region in your CloudFormation drop down. Then in the template itself update the QSS3BucketRegion variable from us-west-2 to your region of choice.
-
-
 Make sure to select TWO Availability Zones (AZ) for your deployment. Selecting one will cause the template to fail.
 
+If your leader gets terminiated, a new leader node will be spawned by the Autoscale Group. The *admin* password will change and will be the *new* instnace_id of the deployment. Simply use that password to log into your Cribl LogStream Leader Node. Additionally, you can now use a git repo to backup your configurations. GitOps on Cribl https://docs.cribl.io/logstream/gitops/
 

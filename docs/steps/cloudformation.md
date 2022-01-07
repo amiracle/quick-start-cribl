@@ -10,7 +10,6 @@
 > - A Subnet ID. This will be created by using the CloudFormation template above.
 > Security Group CIDR Tips. 
 > - Web Access CIDR should be open to either a range of IP's that you want to grant access. You can also open it to the world if you do not have any restrictions for public access to the webport. An example CIDR would be 0.0.0.0/0.
-> - SSH Access CIDR should be closed to your own IP address or a small range of IP's that you want to allow SSH access to your system. An example CIDR for your own IP would be <your_ip_here>/32 where [your IP Address](https://whatismyipaddress.com/) would be placed in the <your_ip_here>. 
 > - Advanced Settings amild is only used if you are issued this by Cribl Support.
    
    - Step 3 Configure stack options

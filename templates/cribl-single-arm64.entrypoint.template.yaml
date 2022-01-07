@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Cribl LogStream Existing VPC QuickStart Deployment arm64 (qs-1s9hhq8an)
+Description: Cribl LogStream Existing VPC QuickStart Deployment arm64 (qs-1skh1tk21)
 Metadata:
   QuickStartDocumentation:
     EntrypointName: Launch into an existing VPC
@@ -17,7 +17,6 @@ Metadata:
           default: Amazon EC2 configuration
         Parameters:
           - instanceType
-          - AdditionalPolicies
       - Label:
           default: AWS Quick Start configuration
         Parameters:
@@ -37,8 +36,6 @@ Metadata:
         default: Quick Start S3 bucket name
       QSS3KeyPrefix:
         default: Quick Start S3 key prefix  
-#  cfn-lint: { config: { ignore_checks: [E9007] } }
-
 Parameters:
   vpcId:
     Description: "REQUIRED: ID of your existing VPC."
@@ -73,10 +70,6 @@ Parameters:
       - m6gd.2xlarge
       - m6gd.4xlarge
     ConstraintDescription: Must contain valid instance type
-  AdditionalPolicies:
-    Default:  "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore,arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
-    Description: A comma separated list of Policy ARNs to add to the IAM role used by Logstream instances
-    Type: CommaDelimitedList
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
     ConstraintDescription: The Quick Start bucket name can include numbers, lowercase
@@ -133,7 +126,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub 
-      - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_arm64_template.yaml
+      - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/cribl-single-arm64.workload.template.yaml
       - S3Bucket: !If
            - UsingDefaultBucket
            - !Sub 'aws-quickstart-cribl-logstream-${QSS3BucketRegion}'
@@ -145,6 +138,3 @@ Resources:
           - ','
           - !Ref subnetIds
         instanceType: !Ref instanceType
-        AdditionalPolicies: !Join 
-          - ','
-          - !Ref AdditionalPolicies

@@ -1,9 +1,9 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Cribl LogStream+VPC QuickStart Deployment x86_64 (qs-1s9hhq8an)
+Description: Cribl LogStream+VPC QuickStart Deployment x86_64 (qs-1skh1tk59)
 Metadata:
   QuickStartDocumentation:
-    EntrypointName: "Launch into a new VPC with VPC Flow Logs Enabled"
-    Order: 3
+    EntrypointName: "Launch into a new VPC"
+    Order: 2
   LICENSE: Apache License, Version 2.0 
   'AWS::CloudFormation::Interface':
     ParameterGroups:
@@ -21,14 +21,7 @@ Metadata:
           default: Amazon EC2 configuration
         Parameters:
           - instanceType
-          - AdditionalPolicies
           - webAccessCidr
-      - Label:
-          default: Flow Logs Parameters
-        Parameters:
-          - ExternalLogBucket
-          - LogFilePrefix
-          - TrafficType
       - Label:
           default: AWS Quick Start configuration
         Parameters:
@@ -41,11 +34,11 @@ Metadata:
       PublicSubnet1CIDR:
         default: Public subnet 1 CIDR
       PublicSubnet2CIDR:
-        default: Public subnet 2 CIDR
+        default: Public subnet 2 CIDR 
       PrivateSubnet1CIDR:
         default: Private subnet 1 CIDR
       PrivateSubnet2CIDR:
-        default: Private subnet 2 CIDR        
+        default: Private subnet 2 CIDR    
       VPCTenancy:
         default: VPC tenancy
       VPCCIDR:
@@ -83,10 +76,6 @@ Parameters:
       - c5ad.2xlarge
       - c5ad.4xlarge
     ConstraintDescription: Must contain valid instance type
-  AdditionalPolicies:
-    Default:  "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore,arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
-    Description: A comma separated list of Policy ARNs to add to the IAM role used by Logstream instances
-    Type: CommaDelimitedList
   PrivateSubnet1CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
@@ -177,40 +166,7 @@ Parameters:
     Default: 10.0.0.0/16
     Description: CIDR Block for the VPC.
     Type: String
-  ExternalLogBucket:
-    Description: >-
-      Optional The name of an S3 bucket where you want to store flow logs. If
-      you leave this empty, the Amazon S3 bucket is created for you.
-    Type: String
-    Default: ''
-  LogFilePrefix:
-    Description: Optional The log file prefix.
-    Type: String
-    Default: ''
-  TrafficType:
-    Description: The type of traffic to log.
-    Type: String
-    Default: ALL
-    AllowedValues:
-      - ACCEPT
-      - REJECT
-      - ALL
-  SQS:
-    Description: Name of the SQS for VPCFlow Logs.
-    Type: String
-    Default: cribl-sqs-vpc
 Conditions:
-  InternalBucket: !Equals 
-    - !Ref ExternalLogBucket
-    - ''
-  ExternalBucket: !Not 
-    - !Equals 
-      - !Ref ExternalLogBucket
-      - ''
-  HasLogFilePrefix: !Not 
-    - !Equals 
-      - Ref: LogFilePrefix
-      - ''
   UsingDefaultBucket: !Equals
     - !Ref QSS3BucketName
     - 'aws-quickstart'
@@ -222,7 +178,7 @@ Resources:
         - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/quickstart-linux-bastion/submodules/quickstart-aws-vpc/templates/aws-vpc.template.yaml
         - S3Bucket: !If
             - UsingDefaultBucket
-            - !Sub 'aws-quickstart-${QSS3BucketRegion}'
+            - !Sub 'aws-quickstart-${AWS::Region}'
             - !Ref 'QSS3BucketName'
           S3Region: !If
             - UsingDefaultBucket
@@ -233,122 +189,21 @@ Resources:
           - ','
           - !Ref AvailabilityZones
         NumberOfAZs: '2'
-        PrivateSubnet1ACIDR: !Ref PrivateSubnet1CIDR
-        PrivateSubnet2ACIDR: !Ref PrivateSubnet2CIDR
         PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
         PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
+        PrivateSubnet1ACIDR: !Ref PrivateSubnet1CIDR
+        PrivateSubnet2ACIDR: !Ref PrivateSubnet2CIDR
         VPCCIDR: !Ref VPCCIDR
         VPCTenancy: !Ref VPCTenancy
-  CriblQueue:
-    Type: 'AWS::SQS::Queue'
-    Properties:
-      QueueName: !Ref SQS
-  CriblQueuePolicy:
-    Type: 'AWS::SQS::QueuePolicy'
-    Properties:
-      PolicyDocument:
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: s3.amazonaws.com
-            Action:
-              - 'SQS:SendMessage'
-            Resource: !GetAtt CriblQueue.Arn
-            Condition:
-              StringEquals:
-                'aws:SourceAccount':
-                  - !Ref "AWS::AccountId"
-      Queues:
-        - !Ref SQS
-  LogBucket:
-    Condition: InternalBucket
-    Type: 'AWS::S3::Bucket'
-    Properties:
-      NotificationConfiguration:
-        QueueConfigurations:
-          - Event: 's3:ObjectCreated:Put'
-            Queue: !GetAtt CriblQueue.Arn
-    DependsOn: CriblQueuePolicy
-  LogBucketPolicy:
-    Condition: InternalBucket
-    Type: 'AWS::S3::BucketPolicy'
-    Properties:
-      Bucket: !Ref LogBucket
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Sid: AWSLogDeliveryWrite
-            Effect: Allow
-            Principal:
-              Service: delivery.logs.amazonaws.com
-            Action: 's3:PutObject'
-            Resource: !If 
-              - HasLogFilePrefix
-              - !Sub '${LogBucket.Arn}/${LogFilePrefix}/AWSLogs/${AWS::AccountId}/*'
-              - !Sub '${LogBucket.Arn}/AWSLogs/${AWS::AccountId}/*'
-            Condition:
-              StringEquals:
-                's3:x-amz-acl': bucket-owner-full-control
-          - Sid: AWSLogDeliveryAclCheck
-            Effect: Allow
-            Principal:
-              Service: delivery.logs.amazonaws.com
-            Action: 's3:GetBucketAcl'
-            Resource: !GetAtt LogBucket.Arn
-          - Sid: AllowSSLRequestsOnly
-            Effect: Deny
-            Principal: '*'
-            Action: 's3:*'
-            Resource:
-              - !GetAtt LogBucket.Arn
-              - !Sub '${LogBucket.Arn}/*'
-            Condition:
-              Bool:
-                'aws:SecureTransport': false
-  FlowLogInternalBucket:
-    Condition: InternalBucket
-  # DependsOn: LogBucketPolicy
-    Type: 'AWS::EC2::FlowLog'
-    Properties:
-      LogDestination: !If 
-        - HasLogFilePrefix
-        - !Sub '${LogBucket.Arn}/${LogFilePrefix}/'
-        - !GetAtt LogBucket.Arn
-      LogDestinationType: s3
-      ResourceId: !GetAtt
-          - VPCStack
-          - Outputs.VPCID
-      ResourceType: VPC
-      TrafficType: !Ref TrafficType
-  FlowLogExternalBucket:
-    Condition: ExternalBucket
-    # DependsOn: LogBucketPolicy
-    Type: 'AWS::EC2::FlowLog'
-    Properties:
-      LogDestination: !If 
-        - HasLogFilePrefix
-        - !Sub 'arn:aws:s3:::${ExternalLogBucket}/${LogFilePrefix}/'
-        - !Sub 'arn:aws:s3:::${ExternalLogBucket}'
-      LogDestinationType: s3
-      ResourceId: !GetAtt
-          - VPCStack
-          - Outputs.VPCID
-      ResourceType: VPC
-      TrafficType: !Ref TrafficType 
-
   CriblDeploy:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub 
-        - https://${S3Bucket}-cribl-logstream-${S3Region}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}/free_x86_64_template.yaml
+        - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/cribl-single-x86.workload.template.yaml
         - S3Bucket: !If
             - UsingDefaultBucket
-            - !Sub 'aws-quickstart'
-            - !Ref 'QSS3BucketName'
-          S3Region: !If
-            - UsingDefaultBucket
-            - !Ref 'AWS::Region'
-            - !Ref 'QSS3BucketRegion'  
+            - !Sub 'aws-quickstart-cribl-logstream-${QSS3BucketRegion}'
+            - !Ref QSS3BucketName
       Parameters:
         webAccessCidr: !Ref webAccessCidr
         vpcId: !GetAtt
@@ -359,6 +214,3 @@ Resources:
           - - !GetAtt VPCStack.Outputs.PublicSubnet1ID
             - !GetAtt VPCStack.Outputs.PublicSubnet2ID
         instanceType: !Ref instanceType
-        AdditionalPolicies: !Join 
-          - ','
-          - !Ref AdditionalPolicies

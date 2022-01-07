@@ -8,7 +8,7 @@ AWS Cloud.
 
 [#architecture1]
 .Quick Start architecture for {partner-product-short-name} on AWS
-image::../images/architecture_diagram.png[Architecture]
+image::../images/Cribl_AWS_Single.png[Architecture]
 
 As shown in <<architecture1>>, the Quick Start sets up the following:
 

@@ -9,6 +9,7 @@ SQS
 S3
 IAM
 Kinesis
+Elastic Load Balancers
 CloudFormation templates
 
 
