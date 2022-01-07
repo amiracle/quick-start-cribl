@@ -1,0 +1,140 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Cribl LogStream Existing VPC QuickStart Deployment arm64 (qs-1skh1tk21)
+Metadata:
+  QuickStartDocumentation:
+    EntrypointName: Launch into an existing VPC
+    Order: 1
+  LICENSE: Apache License, Version 2.0
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+      - Label:
+          default: Network configuration
+        Parameters:
+          - vpcId
+          - subnetIds
+          - webAccessCidr
+      - Label:
+          default: Amazon EC2 configuration
+        Parameters:
+          - instanceType
+      - Label:
+          default: AWS Quick Start configuration
+        Parameters:
+          - QSS3BucketName
+          - QSS3KeyPrefix
+          - QSS3BucketRegion
+    ParameterLabels:
+      instanceType:
+        default: EC2 Instance Type
+      vpcId:
+        default: VPC ID
+      subnetIds:
+        default: Subnet ID
+      webAccessCidr:
+        default: Web Access CIDR 
+      QSS3BucketName:
+        default: Quick Start S3 bucket name
+      QSS3KeyPrefix:
+        default: Quick Start S3 key prefix  
+Parameters:
+  vpcId:
+    Description: "REQUIRED: ID of your existing VPC."
+    Type: AWS::EC2::VPC::Id
+  subnetIds:
+    Description: "REQUIRED: ID of two of your existing Subnet IDs. This subnets must be in the same VPC as VPC ID above."
+    Type: List<AWS::EC2::Subnet::Id>
+  webAccessCidr:
+    Type: String
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
+    Description: "REQUIRED: The CIDR IP range permitted to access the LogStream web console. We recommend you set this value to a trusted IP range."
+  instanceType:
+    Description: EC2 instance type to provision the LogStream instance. If none specified, c6g.2xlarge will be used.
+    Type: String
+    Default: c6g.2xlarge
+    AllowedValues:
+      - c6g.large
+      - c6g.xlarge
+      - c6g.2xlarge
+      - c6g.4xlarge
+      - c6gd.large
+      - c6gd.xlarge
+      - c6gd.2xlarge
+      - c6gd.4xlarge
+      - m6g.large
+      - m6g.xlarge
+      - m6g.2xlarge
+      - m6g.4xlarge
+      - m6gd.large
+      - m6gd.xlarge
+      - m6gd.2xlarge
+      - m6gd.4xlarge
+    ConstraintDescription: Must contain valid instance type
+  QSS3BucketName:
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+    ConstraintDescription: The Quick Start bucket name can include numbers, lowercase
+      letters, uppercase letters, and hyphens (-). It cannot start or end with a 
+      hyphen (-).
+    Default: aws-quickstart-cribl-logstream
+    Description: Name of the S3 bucket for your copy of the Quick Start assets. 
+      Keep the default name unless you are customizing the template. 
+      Changing the name updates code references to point to a new Quick 
+      Start location. This name can include numbers, lowercase letters, 
+      uppercase letters, and hyphens, but do not start or end with a hyphen (-). 
+      See https://aws-quickstart.github.io/option1.html.
+    Type: String
+  QSS3BucketRegion:
+    Default: us-west-2
+    Description: The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.
+    Type: String
+    AllowedValues:
+      - us-east-1
+      - us-east-2
+      - us-west-1
+      - us-west-2
+      - eu-north-1
+      - ap-south-1
+      - eu-west-3
+      - eu-west-2
+      - eu-west-1
+      - ap-northeast-2
+      - ap-northeast-1
+      - sa-east-1
+      - ca-central-1
+      - ap-southeast-1
+      - ap-southeast-2
+      - eu-central-1
+  QSS3KeyPrefix:
+    AllowedPattern: ^([0-9a-zA-Z-.]+/)*$
+    ConstraintDescription: The Quick Start S3 key prefix can include numbers, lowercase letters,
+     uppercase letters, hyphens (-), and forward slashes (/).
+    Default: logstream/
+    Description: S3 key prefix that is used to simulate a directory for your copy of the 
+      Quick Start assets. Keep the default prefix unless you are customizing 
+      the template. Changing this prefix updates code references to point to 
+      a new Quick Start location. This prefix can include numbers, lowercase 
+      letters, uppercase letters, hyphens (-), and forward slashes (/). End with a forward slash. 
+      See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html 
+      and https://aws-quickstart.github.io/option1.html.
+    Type: String
+Conditions:
+  UsingDefaultBucket: !Equals
+    - !Ref QSS3BucketName
+    - 'aws-quickstart-cribl-logstream'
+Resources:
+  CriblDeploy:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub 
+      - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/cribl-single-arm64.workload.template.yaml
+      - S3Bucket: !If
+           - UsingDefaultBucket
+           - !Sub 'aws-quickstart-cribl-logstream-${QSS3BucketRegion}'
+           - !Ref QSS3BucketName
+      Parameters:
+        webAccessCidr: !Ref webAccessCidr
+        vpcId: !Ref vpcId
+        subnetIds: !Join
+          - ','
+          - !Ref subnetIds
+        instanceType: !Ref instanceType

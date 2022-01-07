@@ -1,0 +1,18 @@
+// Replace the content in <>
+// For example: “familiarity with basic concepts in networking, database operations, and data encryption” or “familiarity with <software>.”
+// Include links if helpful. 
+// You don't need to list AWS services or point to general info about AWS; the boilerplate already covers this.
+
+You must have a working knowledge of the following AWS Services: 
+Amazon EC2
+SQS
+S3
+IAM
+Kinesis
+Elastic Load Balancers
+CloudFormation templates
+
+
+You will not need to request an increase in limits for your AWS Account for this deployment. (More information on proper policy and permissions here: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam- template.html) 
+ 
+Note: Individuals possessing the AWS Associate Certificate should have a sufficient depth of knowledge to deploy the resources specified in this guide.

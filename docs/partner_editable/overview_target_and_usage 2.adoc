@@ -1,0 +1,9 @@
+// Replace the content in <>
+// Identify your target audience and explain how/why they would use this Quick Start.
+//Avoid borrowing text from third-party websites (copying text from AWS service documentation is fine). Also, avoid marketing-speak, focusing instead on the technical aspect.
+
+This guide provides instructions for deploying the {partner-product-short-name} Quick Start reference architecture on the AWS Cloud.
+
+This Quick Start was created by Cribl in collaboration with Amazon Web Services (AWS). Quick Starts are automated reference deployments that use AWS CloudFormation templates to deploy key technologies on AWS, following AWS best practices.
+
+Cribl’s mission is to unlock the value of  all your observability data, regardless of source or destination. Cribl LogStream is a vendor neutral, purpose built observability pipeline that can parse, restructure, and enrich data in flight – ensuring that you get the right data, where you want, in the formats you need. This deployment guide was written to help customers properly deploy Cribl LogStream in their Amazon Web Services environment. This guide will detail the steps to deploy the AWS CloudFormation template following AWS best practices. 
