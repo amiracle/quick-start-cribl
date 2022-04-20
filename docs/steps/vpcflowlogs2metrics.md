@@ -16,19 +16,19 @@ This guide will walk you through setting up a VPC and then setup logging VPC Flo
 
 Click on `Configure`
 
-![Configure](/docs/screenshots/s3bucket/s3dest/s3-dest-02.png)
+![Configure](/docs/images/screenshots/s3bucket/s3dest/s3-dest-02.png)
 
 Click on `Sources`
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-01.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-01.png)
 
 Click on `Amazon S3`
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-02.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-02.png)
 
 Click on `Add New`
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-03.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-03.png)
 
 Name the input, for example `vpcflowlogs`
 - Input the name of the `SQS` queue that is triggered by the S3 bucket containing the VPC Flow Logs (e.g. `cribl-sqs`)
@@ -36,34 +36,34 @@ Name the input, for example `vpcflowlogs`
 
 Click `Save`
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-04.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-04.png)
 
 
 > If you are using your own EC2 instances and levereaged the Cloudformation templates, the EC2 worker nodes will have an EC2 Role assigned to them. If you are using `Cribl Cloud` you will need to create an IAM user and insert the `Access Key` and `Secret Key` under the Authentication section with `Manual` selected:
 
->![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-05.png)
+>![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-05.png)
 
 > You can also leverage the Assume Role capabilites to collect data from other AWS Accounts. You can read how to accomplish this from the Cribl Documentation site : https://docs.cribl.io/docs/usecase-aws-x-account 
 
 Now you will need to `Commit` and `Deploy` the changes. Start by clicking on the `Commit` button in the upper right corner.
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-06.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-06.png)
 
 Validate and comment on the changes, then click `Commit`.
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-07.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-07.png)
 
 Now `Deploy` the changes.
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-08.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-08.png)
 
 When promted, click `Yes`.
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-09.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-09.png)
 
 Test to see if any data is flowing into your input by clicking the `Live` button. This takes time depending on how much data is flowing through your input.
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-10.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-10.png)
 
 You can also click on `Save as Sample File` to save the caputed data for testing and validating the data in the `Pipeline` section.
 
@@ -71,57 +71,57 @@ Download the VPC Flow Logs to Metrics [Cribl Content Pack](/cribl/packs/aws_vpcf
 
 Click on `Packs`
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-11.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-11.png)
 
 Click on `Add New`
     - Then click on `Import from File`
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-12.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-12.png)
 
 Select the content pack `aws_vpcflow_logs_to_metrics.crbl`.
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-13.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-13.png)
 
 Name the new pack `aws_vpcflow_logs_to_metrics`.
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-14.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-14.png)
 
 Click on `Commit`.
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-16.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-16.png)
 
 Validate and comment on the changes, then click `Commit`
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-15.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-15.png)
 
 Click on `Deploy`
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-17.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-17.png)
 
 Click `Yes`
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-18.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-18.png)
 
 Your content pack should be installed. Click on `Configure` to see the components that make up the content pack. 
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-19.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-19.png)
 
 Click on `Pipelines` within the pack
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-20.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-20.png)
 
 Click on `AWS_VPCFlow_Logs`. Here you can see all the functions created for you to parse and convert VPC Flow Logs to Metrics.
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-21.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-21.png)
 
 Make sure that your destination (e.g. Splunk) has an index named `metrics`, change it if necessary.
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-22.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-22.png)
 
 Click on `Routes` and add a route. Click `Save`, `Commit` and then `Deploy` your changes. In this example, we are going to be sending the data to Splunk.
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-23.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-23.png)
 
 Example Splunk Dashboard
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-24.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-24.png)

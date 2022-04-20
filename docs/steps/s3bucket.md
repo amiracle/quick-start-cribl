@@ -8,37 +8,37 @@ This use case will show you how to setup Cribl LogStream to send data from any s
 
 ### Validate S3 Destination 
 
-![Cribl Sources Screen](/docs/screenshots/s3bucket/s3dest/s3-dest-01.png)
+![Cribl Sources Screen](/docs/images/screenshots/s3bucket/s3dest/s3-dest-01.png)
 
 - Hover over the left toolbar
     - Click on `Configure`
 
-![Cribl Sources Screen](/docs/screenshots/s3bucket/s3dest/s3-dest-02.png)
+![Cribl Sources Screen](/docs/images/screenshots/s3bucket/s3dest/s3-dest-02.png)
 
 - Click on `Destinations`
 
-![Cribl Sources Screen](/docs/screenshots/s3bucket/s3dest/s3-dest-03.png)
+![Cribl Sources Screen](/docs/images/screenshots/s3bucket/s3dest/s3-dest-03.png)
 
 - Click on `Amazon S3`
 
-![Cribl Sources Screen](/docs/screenshots/s3bucket/s3dest/s3-dest-04.png)
+![Cribl Sources Screen](/docs/images/screenshots/s3bucket/s3dest/s3-dest-04.png)
 
 - Click on the `s3-default` S3 destination
 
-![Cribl Sources Screen](/docs/screenshots/s3bucket/s3dest/s3-dest-05.png)
+![Cribl Sources Screen](/docs/images/screenshots/s3bucket/s3dest/s3-dest-05.png)
 
 - Notice the s3 bucket has already been pre-populated and can accept data.
 
-![Cribl Sources Screen](/docs/screenshots/s3bucket/s3dest/s3-dest-06.png)
+![Cribl Sources Screen](/docs/images/screenshots/s3bucket/s3dest/s3-dest-06.png)
 
 - Click on the `Test` tab
 
-![Cribl Sources Screen](/docs/screenshots/s3bucket/s3dest/s3-dest-07.png)
+![Cribl Sources Screen](/docs/images/screenshots/s3bucket/s3dest/s3-dest-07.png)
 
 - Click `Run Test` and see the `Success` in the Test Results
 
-![Cribl Sources Screen](/docs/screenshots/s3bucket/s3dest/s3-dest-08.png)
+![Cribl Sources Screen](/docs/images/screenshots/s3bucket/s3dest/s3-dest-08.png)
 
 - Log into your AWS S3 view and see the data in the S3 bucket
 
-![Cribl Sources Screen](/docs/screenshots/s3bucket/s3dest/s3-dest-09.png)
+![Cribl Sources Screen](/docs/images/screenshots/s3bucket/s3dest/s3-dest-09.png)

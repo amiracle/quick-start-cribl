@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Create CloudTrail and setup logging to S3 with an SQS enabled'
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+    - Label:
+        default: 'CloudTrail Parameters'
+      Parameters:
+      - ExternalTrailBucket
+      - LogFilePrefix
+Parameters:
+  ExternalTrailBucket:
+    Description: 'Optional The name of the Amazon S3 bucket where CloudTrail publishes log files. If you leave this empty, the Amazon S3 bucket is created for you.'
+    Type: String
+    Default: ''
+  LogFilePrefix:
+    Description: 'Optional The log file prefix.'
+    Type: String
+    Default: ''
+  CTSQS:
+    Description: Name of the SQS for CloudTrail logs.
+    Type: String
+    Default: cribl-sqs-cloudtrail
+Resources:
+  CriblCTQueue:
+    Type: 'AWS::SQS::Queue'
+    Properties:
+      QueueName: !Ref CTSQS
+  CriblCTQueuePolicy:
+    Type: 'AWS::SQS::QueuePolicy'
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: s3.amazonaws.com
+            Action:
+              - 'SQS:SendMessage'
+            Resource: !GetAtt CriblCTQueue.Arn
+            Condition:
+              StringEquals:
+                'aws:SourceAccount':
+                  - !Ref "AWS::AccountId"
+      Queues:
+        - !Ref CTSQS
+  TrailBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      NotificationConfiguration:
+        QueueConfigurations:
+          - Event: 's3:ObjectCreated:Put'
+            Queue: !GetAtt CriblQueue.Arn
+    DependsOn: CriblCTQueuePolicy
+  ExternalTrail:
+    Type: 'AWS::CloudTrail::Trail'
+    Properties:
+      IncludeGlobalServiceEvents: true
+      IsLogging: true
+      IsMultiRegionTrail: true
+      S3BucketName: !Ref ExternalTrailBucket
+      S3KeyPrefix: !Ref LogFilePrefix
+      EnableLogFileValidation: true
+Outputs:
+  Bucket:
+    Description: Logging S3 Bucket for CloudTrail
+    Value: !Sub '${TrailBucket}'
+  SQSQueue:
+    Description: CloudTrail SQS
+    Value: !Sub '${CriblCTQueue}'
+  StackName:
+    Description: 'Stack name.'
+    Value: !Sub '${AWS::StackName}'
