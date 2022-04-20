@@ -16,19 +16,19 @@ We are going to create the following components in your AWS Environment:
 
 Click on `Configure`
 
-![Configure](/docs/screenshots/s3bucket/s3dest/s3-dest-02.png)
+![Configure](/docs/images/screenshots/s3bucket/s3dest/s3-dest-02.png)
 
 Click on `Sources`
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-01.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-01.png)
 
 Click on `Amazon S3`
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-02.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-02.png)
 
 Click on `Add New`
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-03.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-03.png)
 
 Name the input, for example `cloudwatch_metrics`
 - Input the name of the `SQS` queue that is triggered by the S3 bucket containing the VPC Flow Logs (e.g. `cribl-metrics-sqs`)
@@ -36,34 +36,34 @@ Name the input, for example `cloudwatch_metrics`
 
 Click `Save`
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm01.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm01.png)
 
 
 > If you are using your own EC2 instances and levereaged the Cloudformation templates, the EC2 worker nodes will have an EC2 Role assigned to them. If you are using `Cribl Cloud` you will need to create an IAM user and insert the `Access Key` and `Secret Key` under the Authentication section with `Manual` selected:
 
->![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-05.png)
+>![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-05.png)
 
 > You can also leverage the Assume Role capabilites to collect data from other AWS Accounts. You can read how to accomplish this from the Cribl Documentation site : https://docs.cribl.io/docs/usecase-aws-x-account 
 
 Now you will need to `Commit` and `Deploy` the changes. Start by clicking on the `Commit` button in the upper right corner.
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm02.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm02.png)
 
 Validate and comment on the changes, then click `Commit`.
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm03.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm03.png)
 
 Now `Deploy` the changes.
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm04.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm04.png)
 
 Click `Yes`
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm05.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm05.png)
 
 Test to see if any data is flowing into your input by clicking the `Live` button. This takes time depending on how much data is flowing through your input.
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm06.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm06.png)
 
 You can also click on `Save as Sample File` to save the caputed data for testing and validating the data in the `Pipeline` section.
 
@@ -71,53 +71,53 @@ Download the VPC Flow Logs to Metrics [Cribl Content Pack](/cribl/packs/aws_clou
 
 Click on `Packs`
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-11.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-11.png)
 
 Click on `Add New`
     - Then click on `Import from File`
 
-![Sources](/docs/screenshots/s3bucket/vpcflow/sqs-s3-cls-12.png)
+![Sources](/docs/images/screenshots/s3bucket/vpcflow/sqs-s3-cls-12.png)
 
 Select the content pack `aws_cloudwatch_streaming_metrics.crbl`.
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm07.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm07.png)
 
 Name the new pack `aws_cloudwatch_streaming_metrics`.
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm08.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm08.png)
 
 Click on `Commit`.
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm09.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm09.png)
 
 Validate and comment on the changes, then click `Commit`
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm10.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm10.png)
 
 Click on `Deploy`
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm11.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm11.png)
 
 Click `Yes`
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm13.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm13.png)
 
 Your content pack should be installed. Click on `Configure` to see the components that make up the content pack. 
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm12.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm12.png)
 
 Click on `Pipelines` within the pack
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm14.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm14.png)
 
 Click on `AWS_CloudWatch_Streaming_Metrics`. Here you can see all the functions created for you to parse and create the metrics from AWS. 
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm15.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm15.png)
 
 Make sure that your destination (e.g. Splunk) has an index named `metrics`, change it if necessary.
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm16.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm16.png)
 
 Example Splunk Dashboard
 
-![Sources](/docs/screenshots/s3bucket/cwmetrics/cwm17.png)
+![Sources](/docs/images/screenshots/s3bucket/cwmetrics/cwm17.png)
