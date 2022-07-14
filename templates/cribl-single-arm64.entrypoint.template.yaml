@@ -75,7 +75,7 @@ Parameters:
     ConstraintDescription: The Quick Start bucket name can include numbers, lowercase
       letters, uppercase letters, and hyphens (-). It cannot start or end with a 
       hyphen (-).
-    Default: aws-quickstart-cribl-logstream
+    Default: aws-quickstart
     Description: Name of the S3 bucket for your copy of the Quick Start assets. 
       Keep the default name unless you are customizing the template. 
       Changing the name updates code references to point to a new Quick 
@@ -108,7 +108,7 @@ Parameters:
     AllowedPattern: ^([0-9a-zA-Z-.]+/)*$
     ConstraintDescription: The Quick Start S3 key prefix can include numbers, lowercase letters,
      uppercase letters, hyphens (-), and forward slashes (/).
-    Default: logstream/
+    Default: templates/
     Description: S3 key prefix that is used to simulate a directory for your copy of the 
       Quick Start assets. Keep the default prefix unless you are customizing 
       the template. Changing this prefix updates code references to point to 
@@ -120,17 +120,17 @@ Parameters:
 Conditions:
   UsingDefaultBucket: !Equals
     - !Ref QSS3BucketName
-    - 'aws-quickstart-cribl-logstream'
+    - 'aws-quickstart'
 Resources:
   CriblDeploy:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub 
-      - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/cribl-single-arm64.workload.template.yaml
+      - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${S3Bucket}-cribl-logstream/${QSS3KeyPrefix}/cribl-single-arm64.workload.template.yaml
       - S3Bucket: !If
-           - UsingDefaultBucket
-           - !Sub 'aws-quickstart-cribl-logstream-${QSS3BucketRegion}'
-           - !Ref QSS3BucketName
+          - UsingDefaultBucket
+          - !Sub '${QSS3BucketName}'
+          - !Ref QSS3BucketName
       Parameters:
         webAccessCidr: !Ref webAccessCidr
         vpcId: !Ref vpcId
@@ -138,3 +138,7 @@ Resources:
           - ','
           - !Ref subnetIds
         instanceType: !Ref instanceType
+Outputs:
+  Postdeployment:
+    Description: See the deployment guide for postdeployment steps.
+    Value: https://fwd.aws/e6Jk3?

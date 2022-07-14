@@ -145,7 +145,7 @@ Parameters:
     AllowedPattern: ^([0-9a-zA-Z-.]+/)*$
     ConstraintDescription: The Quick Start S3 key prefix can include numbers, lowercase letters,
       uppercase letters, hyphens (-), and forward slashes (/).
-    Default: logstream/
+    Default: templates/
     Description: S3 key prefix that is used to simulate a directory for your copy of the 
       Quick Start assets. Keep the default prefix unless you are customizing 
       the template. Changing this prefix updates code references to point to 
@@ -199,11 +199,11 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub 
-        - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/cribl-single-x86.workload.template.yaml
-        - S3Bucket: !If
-            - UsingDefaultBucket
-            - !Sub 'aws-quickstart-cribl-logstream-${QSS3BucketRegion}'
-            - !Ref QSS3BucketName
+      - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${S3Bucket}-cribl-logstream/${QSS3KeyPrefix}/cribl-single-x86.workload.template.yaml
+      - S3Bucket: !If
+          - UsingDefaultBucket
+          - !Sub '${QSS3BucketName}'
+          - !Ref QSS3BucketName
       Parameters:
         webAccessCidr: !Ref webAccessCidr
         vpcId: !GetAtt
@@ -214,3 +214,7 @@ Resources:
           - - !GetAtt VPCStack.Outputs.PublicSubnet1ID
             - !GetAtt VPCStack.Outputs.PublicSubnet2ID
         instanceType: !Ref instanceType
+Outputs:
+  Postdeployment:
+    Description: See the deployment guide for postdeployment steps.
+    Value: https://fwd.aws/e6Jk3?

@@ -44,7 +44,7 @@ Metadata:
       PrivateSubnet1CIDR:
         default: Private subnet 1 CIDR
       PrivateSubnet2CIDR:
-        default: Private subnet 2 CIDR  
+        default: Private subnet 2 CIDR
       VPCTenancy:
         default: VPC tenancy
       VPCCIDR:
@@ -151,7 +151,7 @@ Parameters:
     AllowedPattern: ^([0-9a-zA-Z-.]+/)*$
     ConstraintDescription: The Quick Start S3 key prefix can include numbers, lowercase letters,
       uppercase letters, hyphens (-), and forward slashes (/).
-    Default: logstream/
+    Default: templates/
     Description: S3 key prefix that is used to simulate a directory for your copy of the 
       Quick Start assets. Keep the default prefix unless you are customizing 
       the template. Changing this prefix updates code references to point to 
@@ -163,7 +163,7 @@ Parameters:
   webAccessCidr:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
-    Description:  "REQUIRED: The CIDR IP range permitted to access the LogStream web console. We recommend you set this value to a trusted IP range."
+    Description:  (Required)The CIDR IP range permitted to access the LogStream web console. We recommend you set this value to a trusted IP range.
     Type: String
     Default: 0.0.0.0/0
   VPCCIDR:
@@ -174,12 +174,12 @@ Parameters:
     Type: String
   ExternalLogBucket:
     Description: >-
-      Optional The name of an S3 bucket where you want to store flow logs. If
-      you leave this empty, the Amazon S3 bucket is created for you.
+      (Optional) The name of an S3 bucket where you want to store flow logs. If
+      you leave this blank, an Amazon S3 bucket is created for you.
     Type: String
     Default: ''
   LogFilePrefix:
-    Description: Optional The log file prefix.
+    Description: (Optional) Log file prefix.
     Type: String
     Default: ''
   TrafficType:
@@ -217,7 +217,7 @@ Resources:
         - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/quickstart-linux-bastion/submodules/quickstart-aws-vpc/templates/aws-vpc.template.yaml
         - S3Bucket: !If
             - UsingDefaultBucket
-            - !Sub 'aws-quickstart-${QSS3BucketRegion}'
+            - !Sub '${QSS3BucketName}-${QSS3BucketRegion}'
             - !Ref 'QSS3BucketName'
           S3Region: !If
             - UsingDefaultBucket
@@ -335,10 +335,10 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub 
-        - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/cribl-single-arm64.workload.template.yaml
+        - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${S3Bucket}-cribl-logstream/${QSS3KeyPrefix}/cribl-single-arm64.workload.template.yaml
         - S3Bucket: !If
             - UsingDefaultBucket
-            - !Sub 'aws-quickstart-cribl-logstream-${QSS3BucketRegion}'
+            - !Sub '${QSS3BucketName}'
             - !Ref QSS3BucketName
       Parameters:
         webAccessCidr: !Ref webAccessCidr
@@ -350,3 +350,7 @@ Resources:
           - - !GetAtt VPCStack.Outputs.PublicSubnet1ID
             - !GetAtt VPCStack.Outputs.PublicSubnet2ID
         instanceType: !Ref instanceType
+Outputs:
+  Postdeployment:
+    Description: See the deployment guide for postdeployment steps.
+    Value: https://fwd.aws/e6Jk3?
