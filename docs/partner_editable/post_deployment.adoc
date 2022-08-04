@@ -1,0 +1,37 @@
+//Include any postdeployment steps here, such as steps necessary to test that the deployment was successful. If there are no postdeployment steps leave this file empty.
+
+== Postdeployment steps
+
+=== Logging into the Cribl
+
+Log in to Cribl Stream with the credential supplied in the nested **CriblDeploy** "Outputs" tab on your CloudFormation stack. Go to the Cribl instance created and use the AMI Instance ID as the password. 
+
+=== Adding other data sources and destinations
+
+You can add data sources, such as Amazon Kinesis, Amazon Simple Queue Service (Amazon SQS), or Amazon S3, to the IAM policy that is included with the deployment. You must have the ARN and IAM policy requirements for any services that you to add. After editing the IAM policy, refer to the following links to integrate the added source or destination with Stream.
+
+==== Data sources
+
+* https://docs.cribl.io/stream/sources-kinesis-streams/#auto-authentication[Amazon Kinesis]
+
+* https://docs.cribl.io/stream/sources-sqs#sqs-permissions[Amazon SQS]
+
+* https://docs.cribl.io/stream/sources-s3#s3-and-sqs-permissions[Amazon S3]
+
+==== Data destinations
+
+* https://docs.cribl.io/stream/destinations-sqs#sqs-permissions[Amazon SQS] 
+
+* https://docs.cribl.io/stream/destinations-s3#amazon-s3-permissions[Amazon S3] 
+
+== Aditional resources
+
+* https://cribl.io/community[Cribl Community]
+* https://cribl.io/resources[Cribl Resources]
+* https://docs.cribl.io/docs/deploy-single-instance[Single Instance Deployments]
+* https://docs.cribl.io/docs/deploy-distributed[Distributed Deployments]
+* https://docs.cribl.io/docs/scaling[Sizing and Scaling]
+* https://docs.cribl.io/logstream/usecase-aws-x-account[AWS Cross-Account Data Collection]
+* https://docs.cribl.io/logstream/sources[Sources]
+* https://docs.cribl.io/logstream/destinations[Destinations]
+* https://cribl.io/integrations/[Integrations]
