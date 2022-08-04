@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Cribl LogStream+VPC QuickStart Deployment x86_64 (qs-1skh1tk51)
 Metadata:
   QuickStartDocumentation:
-    EntrypointName: Deploy into a new VPC with VPC Flow Logs enabled
+    EntrypointName: "Launch into a new VPC with VPC Flow Logs Enabled"
     Order: 3
   LICENSE: Apache License, Version 2.0 
   'AWS::CloudFormation::Interface':
@@ -18,10 +18,14 @@ Metadata:
           - PrivateSubnet2CIDR
           - VPCTenancy
       - Label:
+          default: Cribl Configuration
+        Parameters:
+          - CriblVersion
+      - Label:
           default: Amazon EC2 configuration
         Parameters:
-          - instanceType
           - webAccessCidr
+          - instanceType
       - Label:
           default: Flow Logs Parameters
         Parameters:
@@ -50,18 +54,23 @@ Metadata:
       VPCCIDR:
         default: VPC CIDR
       instanceType:
-        default: EC2 instance type
+        default: EC2 Instance Type
       QSS3BucketName:
         default: Quick Start S3 bucket name
       QSS3KeyPrefix:
-        default: Quick Start S3 key prefix  
-  cfn-lint: { config: { ignore_checks: [E9007] } }
+        default: Quick Start S3 key prefix
+      CriblVersion:
+        default: Cribl Version for Deployment
 Parameters:
+  CriblVersion:
+    Default: 3.5.1
+    Description: Version of Cribl for your deployment
+    Type: String
   AvailabilityZones:
     Description: List of Availability Zones to use for the subnets in the VPC.
     Type: 'List<AWS::EC2::AvailabilityZone::Name>'
   instanceType:
-    Description: EC2 instance type to provision the LogStream instance. If none specified, c5.2xlarge is used.
+    Description: EC2 instance type to provision the LogStream instance. If none specified, c5.2xlarge will be used.
     Type: String
     Default: c5.2xlarge
     AllowedValues:
@@ -82,18 +91,6 @@ Parameters:
       - c5ad.2xlarge
       - c5ad.4xlarge
     ConstraintDescription: Must contain valid instance type
-  PrivateSubnet1CIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
-    Default: 10.0.0.0/19
-    Description: CIDR block for private subnet 1, located in Availability Zone 1.
-    Type: String
-  PrivateSubnet2CIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
-    Default: 10.0.32.0/19
-    Description: CIDR block for private subnet 2, located in Availability Zone 2.
-    Type: String
   PublicSubnet1CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
@@ -105,6 +102,18 @@ Parameters:
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
     Default: 10.0.144.0/20
     Description: CIDR block for the public DMZ subnet 2, located in Availability Zone 2.
+    Type: String
+  PrivateSubnet1CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
+    Default: 10.0.0.0/19
+    Description: CIDR block for private subnet 1, located in Availability Zone 1.
+    Type: String
+  PrivateSubnet2CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
+    Default: 10.0.32.0/19
+    Description: CIDR block for private subnet 2, located in Availability Zone 2.
     Type: String
   VPCTenancy:
     AllowedValues:
@@ -127,18 +136,35 @@ Parameters:
       See https://aws-quickstart.github.io/option1.html.
     Type: String
   QSS3BucketRegion:
-    Default: 'us-east-1'
+    Default: us-west-2
     Description: 'AWS Region where the Quick Start S3 bucket (QSS3BucketName) is 
     hosted. Keep the default Region unless you are customizing the template. 
     Changing this Region updates code references to point to a new Quick Start location. 
     When using your own bucket, specify the Region. 
     See https://aws-quickstart.github.io/option1.html.'
     Type: String
+    AllowedValues:
+      - us-east-1
+      - us-east-2
+      - us-west-1
+      - us-west-2
+      - eu-north-1
+      - ap-south-1
+      - eu-west-3
+      - eu-west-2
+      - eu-west-1
+      - ap-northeast-2
+      - ap-northeast-1
+      - sa-east-1
+      - ca-central-1
+      - ap-southeast-1
+      - ap-southeast-2
+      - eu-central-1
   QSS3KeyPrefix:
     AllowedPattern: ^([0-9a-zA-Z-.]+/)*$
     ConstraintDescription: The Quick Start S3 key prefix can include numbers, lowercase letters,
-      uppercase letters, hyphens (-), and forward slashes (/).
-    Default: templates/
+     uppercase letters, hyphens (-), and forward slashes (/).
+    Default: logstream/
     Description: S3 key prefix that is used to simulate a directory for your copy of the 
       Quick Start assets. Keep the default prefix unless you are customizing 
       the template. Changing this prefix updates code references to point to 
@@ -150,23 +176,23 @@ Parameters:
   webAccessCidr:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
-    Description:  (Required) The CIDR IP range permitted to access the LogStream web console. We recommend you set this value to a trusted IP range.
+    Description:  "REQUIRED: The CIDR IP range permitted to access the LogStream web console. We recommend you set this value to a trusted IP range."
     Type: String
     Default: 0.0.0.0/0
   VPCCIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.0.0/16
-    Description: CIDR block for the VPC.
+    Description: CIDR Block for the VPC.
     Type: String
   ExternalLogBucket:
     Description: >-
       (Optional) The name of an S3 bucket where you want to store flow logs. If
-      you leave this empty, an Amazon S3 bucket is created for you.
+      you leave this blank, an Amazon S3 bucket is created for you.
     Type: String
     Default: ''
   LogFilePrefix:
-    Description: (Optional) The log file prefix.
+    Description: (Optional) Log file prefix.
     Type: String
     Default: ''
   TrafficType:
@@ -178,7 +204,7 @@ Parameters:
       - REJECT
       - ALL
   SQS:
-    Description: Name of the SQS for VPC Flow Logs.
+    Description: Name of the SQS for VPCFlow Logs.
     Type: String
     Default: cribl-sqs-vpc
 Conditions:
@@ -215,10 +241,10 @@ Resources:
           - ','
           - !Ref AvailabilityZones
         NumberOfAZs: '2'
-        PrivateSubnet1ACIDR: !Ref PrivateSubnet1CIDR
-        PrivateSubnet2ACIDR: !Ref PrivateSubnet2CIDR
         PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
         PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
+        PrivateSubnet1ACIDR: !Ref PrivateSubnet1CIDR
+        PrivateSubnet2ACIDR: !Ref PrivateSubnet2CIDR
         VPCCIDR: !Ref VPCCIDR
         VPCTenancy: !Ref VPCTenancy
   CriblQueue:
@@ -322,11 +348,11 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub 
-      - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${S3Bucket}-cribl-logstream/${QSS3KeyPrefix}/cribl-single-x86.workload.template.yaml
-      - S3Bucket: !If
-          - UsingDefaultBucket
-          - !Sub '${QSS3BucketName}'
-          - !Ref QSS3BucketName
+        - https://${S3Bucket}-${QSS3BucketRegion}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/${CriblVersion}/quickstart/free_x86_64_template.yaml
+        - S3Bucket: !If
+            - UsingDefaultBucket
+            - !Sub '${QSS3BucketName}-cribl-logstream'
+            - !Ref QSS3BucketName
       Parameters:
         webAccessCidr: !Ref webAccessCidr
         vpcId: !GetAtt

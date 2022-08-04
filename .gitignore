@@ -3,3 +3,9 @@
 taskcat_outputs/*.txt
 .taskcat_overrides.yml
 ./taskcat_outputs/*.txt
+.taskcat/.remote_templates/abpligmkfmdegbzn.template
+.taskcat/.remote_templates/fpiziqrosgpkibko.template
+.taskcat/.remote_templates/pilsqpdzrqxyadzp.template
+.taskcat/.remote_templates/rxzbhawppvmzmftb.template
+.taskcat.yml
+taskcat_outputs/index.html

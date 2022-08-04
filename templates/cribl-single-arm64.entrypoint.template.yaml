@@ -35,8 +35,14 @@ Metadata:
       QSS3BucketName:
         default: Quick Start S3 bucket name
       QSS3KeyPrefix:
-        default: Quick Start S3 key prefix  
+        default: Quick Start S3 key prefix
+      CriblVersion:
+        default: Cribl Version for Deployment
 Parameters:
+  CriblVersion:
+    Default: 3.5.1
+    Description: Version of Cribl for your deployment
+    Type: String
   vpcId:
     Description: "REQUIRED: ID of your existing VPC."
     Type: AWS::EC2::VPC::Id
@@ -108,7 +114,7 @@ Parameters:
     AllowedPattern: ^([0-9a-zA-Z-.]+/)*$
     ConstraintDescription: The Quick Start S3 key prefix can include numbers, lowercase letters,
      uppercase letters, hyphens (-), and forward slashes (/).
-    Default: templates/
+    Default: logstream/
     Description: S3 key prefix that is used to simulate a directory for your copy of the 
       Quick Start assets. Keep the default prefix unless you are customizing 
       the template. Changing this prefix updates code references to point to 
@@ -126,11 +132,11 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub 
-      - https://${S3Bucket}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${S3Bucket}-cribl-logstream/${QSS3KeyPrefix}/cribl-single-arm64.workload.template.yaml
-      - S3Bucket: !If
-          - UsingDefaultBucket
-          - !Sub '${QSS3BucketName}'
-          - !Ref QSS3BucketName
+        - https://${S3Bucket}-${QSS3BucketRegion}.s3.${QSS3BucketRegion}.${AWS::URLSuffix}/${QSS3KeyPrefix}/${CriblVersion}/quickstart/free_arm64_template.yaml
+        - S3Bucket: !If
+            - UsingDefaultBucket
+            - !Sub '${QSS3BucketName}-cribl-logstream'
+            - !Ref QSS3BucketName
       Parameters:
         webAccessCidr: !Ref webAccessCidr
         vpcId: !Ref vpcId
